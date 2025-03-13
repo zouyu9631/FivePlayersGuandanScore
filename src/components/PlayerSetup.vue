@@ -2,7 +2,7 @@
   <div class="container">
     <h1>五人掼蛋记分器</h1>
     <div class="card">
-      <h2>玩家设置</h2>
+      <h2>请输入五位玩家的名称</h2>
       <div class="players-container">
         <div v-for="(player, index) in players" :key="index" class="player-input">
           <input 
@@ -11,6 +11,8 @@
             :placeholder="`玩家${index + 1}`" 
             maxlength="8" 
             @blur="validateName(index)"
+            @focus="onFocus(index)"
+            :class="{'default-name': isDefaultName(index)}"
           />
         </div>
       </div>
@@ -28,12 +30,23 @@ export default {
   emits: ['start-game'],
   setup(props, { emit }) {
     const players = ref([
-      { name: '玩家1', score: 0 },
-      { name: '玩家2', score: 0 },
-      { name: '玩家3', score: 0 },
-      { name: '玩家4', score: 0 },
-      { name: '玩家5', score: 0 }
+      { name: '', score: 0 },
+      { name: '', score: 0 },
+      { name: '', score: 0 },
+      { name: '', score: 0 },
+      { name: '', score: 0 }
     ]);
+
+    const isDefaultName = (index) => {
+      return !players.value[index].name || players.value[index].name === `玩家${index + 1}`;
+    };
+
+    const onFocus = (index) => {
+      // 当用户点击输入框时，确保内容为空，方便输入
+      if (players.value[index].name === `玩家${index + 1}`) {
+        players.value[index].name = '';
+      }
+    };
 
     const validateName = (index) => {
       // 检查空名字
@@ -67,7 +80,9 @@ export default {
     return {
       players,
       startGame,
-      validateName
+      validateName,
+      onFocus,
+      isDefaultName
     };
   }
 };
@@ -88,6 +103,7 @@ export default {
 .player-input input {
   flex: 1;
   width: 100%;
+  color: #000; /* 自定义输入的名字为黑色 */
 }
 
 .actions {
@@ -99,5 +115,9 @@ export default {
 .primary-btn {
   padding: 10px 20px;
   font-size: 16px;
+}
+
+.default-name {
+  color: #999 !important; /* 使用灰色表示默认名称 */
 }
 </style>
