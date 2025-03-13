@@ -2,7 +2,7 @@
   <div class="container">
     <h1>五人掼蛋记分器</h1>
     <div class="card">
-      <h2>请输入五位玩家的名称</h2>
+      <h2>输入五位玩家的名字</h2>
       <div class="players-container">
         <div v-for="(player, index) in players" :key="index" class="player-input">
           <input 
@@ -18,6 +18,9 @@
       </div>
       <div class="actions">
         <button @click="startGame" class="primary-btn">开始游戏</button>
+      </div>
+      <div class="credits">
+        感谢徐公子，让掼蛋多了一份精彩
       </div>
     </div>
   </div>
@@ -119,5 +122,13 @@ export default {
 
 .default-name {
   color: #999 !important; /* 使用灰色表示默认名称 */
+}
+
+.credits {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+  font-style: italic;
 }
 </style>
