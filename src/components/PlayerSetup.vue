@@ -15,13 +15,13 @@
             :class="{'default-name': isDefaultName(index)}"
           />
         </div>
+        <div class="actions">
+          <button @click="startGame" class="primary-btn">开始游戏</button>
+        </div>
       </div>
-      <div class="actions">
-        <button @click="startGame" class="primary-btn">开始游戏</button>
-      </div>
-      <div class="credits">
-        感谢徐公子，让掼蛋多了一份精彩
-      </div>
+    </div>
+    <div class="credits">
+      感谢许公子，让掼蛋多了一份精彩
     </div>
   </div>
 </template>
@@ -92,11 +92,26 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+
+.card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .players-container {
   display: flex;
   flex-direction: column;
   gap: 15px;
   margin-bottom: 20px;
+  flex: 1;
 }
 
 .player-input {
@@ -113,6 +128,7 @@ export default {
   display: flex;
   justify-content: center;
   margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .primary-btn {
@@ -125,10 +141,11 @@ export default {
 }
 
 .credits {
-  margin-top: 20px;
   text-align: center;
   font-size: 12px;
   color: #888;
   font-style: italic;
+  margin-top: auto;
+  padding: 10px 0;
 }
 </style>
