@@ -22,6 +22,7 @@
     <!-- 叫牌区域 -->
     <CardSelector 
       v-model="calledCard"
+      :currentRound="currentRound"
     />
 
     <!-- 排名区域 -->
