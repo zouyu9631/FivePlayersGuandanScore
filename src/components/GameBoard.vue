@@ -20,9 +20,8 @@
     <GameHistory v-if="showHistory" :gameHistory="gameHistory" />
 
     <!-- 叫牌区域 -->
-    <RoleSelector 
-      :calledCard="calledCard" 
-      @update:showCardSelector="showCardSelector = true"
+    <CardSelector 
+      v-model="calledCard"
     />
 
     <!-- 排名区域 -->
@@ -40,12 +39,17 @@
     </div>
 
     <!-- 弹窗组件 -->
-    <CardSelector
-      v-if="showCardSelector"
-      @close="showCardSelector = false"
-      @select="handleCardSelect"
+    <RoleAssignmentDialog
+      v-if="showRoleSelection"
+      :player="selectedPlayer"
+      :current-emperor="emperor"
+      :current-guard="guard"
+      @close="showRoleSelection = false"
+      @assign="assignRole"
+      @remove="removeRoles"
     />
-
+    
+    <!-- 确认对话框 -->
     <ConfirmationDialog
       v-if="showConfirmation"
       :calledCard="calledCard"
@@ -55,16 +59,6 @@
       :scoreChanges="scoreChanges"
       @confirm="confirmScore"
       @cancel="showConfirmation = false"
-    />
-
-    <RoleAssignmentDialog
-      v-if="showRoleSelection"
-      :player="selectedPlayer"
-      :current-emperor="emperor"
-      :current-guard="guard"
-      @close="showRoleSelection = false"
-      @assign="assignRole"
-      @remove="removeRoles"
     />
     
     <!-- 错误提示弹窗 -->
@@ -87,7 +81,6 @@ import GameHistory from './GameHistory.vue';
 import CardSelector from './CardSelector.vue';
 import ConfirmationDialog from './ConfirmationDialog.vue';
 import PlayerRanking from './PlayerRanking.vue';
-import RoleSelector from './RoleSelector.vue';
 import RoleAssignmentDialog from './RoleAssignmentDialog.vue';
 
 export default {
@@ -96,7 +89,6 @@ export default {
     CardSelector,
     ConfirmationDialog,
     PlayerRanking,
-    RoleSelector,
     RoleAssignmentDialog
   },
   
@@ -122,7 +114,6 @@ export default {
     } = useGameLogic(props);
 
     // UI状态
-    const showCardSelector = ref(false);
     const showConfirmation = ref(false);
     const showHistory = ref(false);
     const showRoleSelection = ref(false);
@@ -138,10 +129,6 @@ export default {
     // 方法
     const toggleHistory = () => {
       showHistory.value = !showHistory.value;
-    };
-
-    const handleCardSelect = (card) => {
-      calledCard.value = card;
     };
 
     const handleResetRound = () => {
@@ -226,7 +213,6 @@ export default {
       emperor,
       guard,
       calledCard,
-      showCardSelector,
       showConfirmation,
       scoreChanges,
       isReadyToCalculate,
@@ -237,7 +223,6 @@ export default {
       selectedPlayer,
       
       toggleHistory,
-      handleCardSelect,
       handleResetRound,
       handleCalculateScore,
       confirmScore,

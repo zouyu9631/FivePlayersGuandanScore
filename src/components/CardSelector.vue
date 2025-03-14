@@ -1,5 +1,5 @@
 <template>
-  <div class="card-selector-overlay" @click="$emit('close')">
+  <div v-if="visible" class="card-selector-overlay" @click="closeSelector">
     <div class="card-selector" @click.stop>
       <h3>选择叫牌</h3>
       <div class="card-grid">
@@ -7,41 +7,83 @@
           <div v-for="(value, valueIndex) in cardValues" :key="`${suitIndex}-${valueIndex}`" 
                class="card-option" 
                :class="{ 'red-card': suit === '♥' || suit === '♦' }"
-               @click="selectCard(suit, value)">
+               @click="handleCardSelect(suit, value)">
             {{ getCardDisplay(suit, value) }}
           </div>
         </div>
-        <div class="card-option joker" @click="selectCard('joker', 'small')">🃏</div>
+        <div class="card-option joker" @click="handleCardSelect('joker', 'small')">🃏</div>
       </div>
+    </div>
+  </div>
+  <div v-else class="card-display">
+    <div class="card-selection" @click="openSelector">
+      <div class="selected-card">{{ selectedCard }}</div>
+      <div class="card-hint">(点击更换叫牌)</div>
     </div>
   </div>
 </template>
 
 <script>
+import { ref, computed, watch } from 'vue';
+
 export default {
-  emits: ['close', 'select'],
+  props: {
+    modelValue: {
+      type: String,
+      default: '🃏'
+    }
+  },
+  
+  emits: ['update:modelValue'],
+  
   setup(props, { emit }) {
+    const visible = ref(false);
+    const selectedCard = ref(props.modelValue);
+    
     const cardSuits = ['♠', '♥', '♦', '♣'];
     const cardValues = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+
+    // 监听props变化同步内部状态
+    watch(() => props.modelValue, (newValue) => {
+      selectedCard.value = newValue;
+    });
 
     const getCardDisplay = (suit, value) => {
       return `${suit}${value}`;
     };
+    
+    // 打开选择器
+    const openSelector = () => {
+      visible.value = true;
+    };
+    
+    // 关闭选择器
+    const closeSelector = () => {
+      visible.value = false;
+    };
 
-    const selectCard = (suit, value) => {
+    // 处理牌选择
+    const handleCardSelect = (suit, value) => {
+      let card;
       if (suit === 'joker') {
-        emit('select', '🃏');
+        card = '🃏';
       } else {
-        emit('select', `${suit}${value}`);
+        card = `${suit}${value}`;
       }
-      emit('close');
+      selectedCard.value = card;
+      emit('update:modelValue', card);
+      visible.value = false;
     };
 
     return {
+      visible,
+      selectedCard,
       cardSuits,
       cardValues,
       getCardDisplay,
-      selectCard
+      openSelector,
+      closeSelector,
+      handleCardSelect
     };
   }
 };
@@ -95,5 +137,42 @@ export default {
 
 .red-card {
   color: #d32f2f;
+}
+
+/* 从RoleSelector.vue合并的样式 */
+.card-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 15px 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card-selection {
+  text-align: center;
+  cursor: pointer;
+}
+
+.selected-card {
+  font-size: 48px;
+  margin-bottom: 5px;
+}
+
+.card-hint {
+  font-size: 14px;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .card-display {
+    padding: 15px;
+  }
+  
+  .selected-card {
+    font-size: 42px;
+  }
 }
 </style>
