@@ -30,7 +30,7 @@
             <span class="drag-icon">≡</span>
           </div>
           <span class="rank-number">{{ index + 1 }}. </span>
-          <span class="player-name" @click="$emit('select-player', element.name)">{{ element.name }}</span>
+          <span class="player-name" @click="handlePlayerClick($event, element.name)">{{ element.name }}</span>
           <div class="role-indicators">
             <span v-if="element.name === emperor && element.name !== guard" class="role-indicator emperor-indicator" title="皇帝">👑</span>
             <span v-if="element.name === guard && element.name !== emperor" class="role-indicator guard-indicator" title="侍卫">🛡️</span>
@@ -82,8 +82,18 @@ export default {
       });
     });
 
+    // 添加点击处理函数，获取点击位置
+    const handlePlayerClick = (event, playerName) => {
+      const position = {
+        x: event.clientX,
+        y: event.clientY
+      };
+      emit('select-player', playerName, position);
+    };
+
     return {
-      internalValue
+      internalValue,
+      handlePlayerClick
     };
   }
 };
@@ -238,7 +248,7 @@ export default {
   border: 1px solid #ddd !important;
   height: 40px !important;
   padding: 0 !important;
-  box-sizing: border-box !important;
+  box-sizing: border-box !重要;
   display: flex !important;
   align-items: center !important;
 }
@@ -290,10 +300,10 @@ export default {
   /* 移动端的占位符样式 */
   .ghost-placeholder {
     height: 44px !important; /* 与移动端静态元素保持一致 */
-    min-height: 44px !important; /* 修正这里的中文符号 */
+    min-height: 44px !important; /* 修正这里的语法错误 */
     border: 2px dashed #1976d2 !important;
     background-color: rgba(25, 118, 210, 0.15) !important;
-    opacity: 0.7 !important;
+    opacity: 0.7 !important; /* 修复这里的语法错误 */
   }
   
   /* 移动端拖拽元素样式强化 */

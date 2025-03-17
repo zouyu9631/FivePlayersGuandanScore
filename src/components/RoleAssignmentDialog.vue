@@ -1,17 +1,30 @@
 <template>
   <div class="role-selection-modal" @click="$emit('close')">
-    <div class="role-selection-container" @click.stop>
-      <h3>选择身份</h3>
-      <p>为玩家 <strong>{{ player }}</strong> 分配身份:</p>
+    <div class="role-selection-container" 
+         @click.stop
+         :style="dialogStyle">
+      <p>为 <strong>{{ player }}</strong> 分配身份:</p>
+      
       <div class="role-buttons">
-        <button @click="$emit('assign', 'emperor', player)" :class="{ 'active': isEmperor }">
-          设为皇帝 👑
+        <button 
+          @click="$emit('assign', 'emperor', player)" 
+          :class="{ 'active': isEmperor }"
+          class="role-btn emperor-btn">
+          <span class="role-icon">👑</span>
         </button>
-        <button @click="$emit('assign', 'guard', player)" :class="{ 'active': isGuard }">
-          设为侍卫 🛡️
+        
+        <button 
+          @click="$emit('assign', 'guard', player)" 
+          :class="{ 'active': isGuard }"
+          class="role-btn guard-btn">
+          <span class="role-icon">🛡️</span>
         </button>
-        <button @click="$emit('remove', player)" class="remove-role-btn" :disabled="!hasRole">
-          移除身份
+        
+        <button 
+          @click="$emit('remove', player)" 
+          class="role-btn remove-role-btn" 
+          :disabled="!hasRole">
+          <span class="role-icon">❌</span>
         </button>
       </div>
     </div>
@@ -19,13 +32,17 @@
 </template>
 
 <script>
-import { computed } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 
 export default {
   props: {
     player: String,
     currentEmperor: String,
-    currentGuard: String
+    currentGuard: String,
+    position: {
+      type: Object,
+      default: () => ({ x: 0, y: 0 })
+    }
   },
   
   emits: ['close', 'assign', 'remove'],
@@ -35,10 +52,49 @@ export default {
     const isGuard = computed(() => props.player === props.currentGuard);
     const hasRole = computed(() => isEmperor.value || isGuard.value);
     
+    // 计算对话框位置
+    const dialogStyle = ref({});
+    
+    onMounted(() => {
+      calculatePosition();
+    });
+    
+    const calculatePosition = () => {
+      // 更准确的容器尺寸估算
+      const dialogWidth = 220;
+      const dialogHeight = 140; // 减小高度估计值，更符合实际
+      
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      
+      // 如果位置坐标存在
+      if (props.position.x && props.position.y) {
+        let left = Math.max(10, Math.min(windowWidth - dialogWidth - 10, props.position.x - dialogWidth / 2));
+        let top;
+        
+        // 优化垂直位置计算逻辑
+        if (props.position.y > windowHeight / 2) {
+          // 点击位置在屏幕下半部分，显示在上方
+          top = Math.max(10, props.position.y - dialogHeight - 10);
+        } else {
+          // 点击位置在屏幕上半部分，显示在下方
+          top = Math.min(windowHeight - dialogHeight - 10, props.position.y + 10);
+        }
+        
+        dialogStyle.value = {
+          position: 'absolute',
+          left: `${left}px`,
+          top: `${top}px`,
+          transform: 'none'
+        };
+      }
+    };
+    
     return {
       isEmperor,
       isGuard,
-      hasRole
+      hasRole,
+      dialogStyle
     };
   }
 };
@@ -60,50 +116,103 @@ export default {
 
 .role-selection-container {
   background-color: white;
-  border-radius: 8px;
-  padding: 20px;
-  width: 90%;
-  max-width: 320px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.role-selection-container h3 {
-  margin-top: 0;
-  text-align: center;
+  border-radius: 10px;
+  padding: 15px;
+  width: 80%;
+  max-width: 220px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
 .role-selection-container p {
   text-align: center;
-  margin-bottom: 20px;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 15px;
 }
 
 .role-buttons {
   display: flex;
-  flex-direction: column;
+  justify-content: space-around;
   gap: 10px;
 }
 
-.role-buttons button {
-  padding: 12px;
-  font-size: 16px;
-  transition: transform 0.1s;
+.role-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 55px;  /* 从60px减小到55px */
+  height: 55px; /* 从60px减小到55px */
+  border-radius: 50%;
+  padding: 0;
+  transition: all 0.2s ease; /* 简化transition属性 */
+  background-color: #f5f5f5;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.role-buttons button:active {
-  transform: scale(0.98);
+.role-btn:active {
+  transform: scale(0.95);
 }
 
-.role-buttons .active {
-  background-color: #2196F3;
-  border: 2px solid #0b7dda;
+.role-icon {
+  font-size: 22px; /* 从24px减小到22px */
 }
 
+/* 皇帝按钮 - 使用与排序界面相同的底色 */
+.emperor-btn {
+  background-color: #fff8e1;
+  border-color: #ffe082;
+}
+
+.emperor-btn.active {
+  background-color: #ffecb3;
+  border-color: #ffd54f;
+}
+
+/* 侍卫按钮 - 使用与排序界面相同的底色 */
+.guard-btn {
+  background-color: #e8f5e9;
+  border-color: #a5d6a7;
+}
+
+.guard-btn.active {
+  background-color: #c8e6c9;
+  border-color: #81c784;
+}
+
+/* 移除按钮 */
 .remove-role-btn {
-  background-color: #f44336;
-  margin-top: 10px;
+  background-color: #ffebee;
+  border-color: #ffcdd2;
 }
 
 .remove-role-btn:disabled {
-  background-color: #cccccc;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.remove-role-btn:not(:disabled):hover {
+  background-color: #ffcdd2;
+}
+
+@media (max-width: 340px) {
+  .role-btn {
+    width: 45px;  /* 从50px减小到45px */
+    height: 45px; /* 从50px减小到45px */
+  }
+  
+  .role-icon {
+    font-size: 20px; /* 减小图标尺寸 */
+  }
+}
+
+/* 合并重复的样式规则 */
+.emperor-btn, .guard-btn, .remove-role-btn {
+  border: 1px solid transparent;
+}
+
+.emperor-btn.active, .guard-btn.active {
+  border-width: 2px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 </style>

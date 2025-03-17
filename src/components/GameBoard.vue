@@ -45,6 +45,7 @@
       :player="selectedPlayer"
       :current-emperor="emperor"
       :current-guard="guard"
+      :position="dialogPosition" 
       @close="showRoleSelection = false"
       @assign="assignRole"
       @remove="removeRoles"
@@ -121,6 +122,7 @@ export default {
     const showError = ref(false);
     const selectedPlayer = ref('');
     const errorMessage = ref('');
+    const dialogPosition = ref({ x: 0, y: 0 }); // 新增：存储对话框位置
 
     // 监听props变化
     watch(() => props.players, (newVal) => {
@@ -185,8 +187,9 @@ export default {
       showConfirmation.value = false;
     };
 
-    const handlePlayerSelect = (playerName) => {
+    const handlePlayerSelect = (playerName, position) => {
       selectedPlayer.value = playerName;
+      dialogPosition.value = position || { x: 0, y: 0 }; // 保存点击位置
       showRoleSelection.value = true;
     };
 
@@ -200,12 +203,9 @@ export default {
     };
 
     const removeRoles = (playerName) => {
-      if (emperor.value === playerName) {
-        emperor.value = '';
-      }
-      if (guard.value === playerName) {
-        guard.value = '';
-      }
+      // 合并条件，简化逻辑
+      if (emperor.value === playerName) emperor.value = '';
+      if (guard.value === playerName) guard.value = '';
       showRoleSelection.value = false;
     };
 
@@ -222,6 +222,7 @@ export default {
       showError,
       errorMessage,
       selectedPlayer,
+      dialogPosition,
       
       toggleHistory,
       handleResetRound,
