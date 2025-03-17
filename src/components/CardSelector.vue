@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 
 export default {
   props: {
@@ -48,43 +48,34 @@ export default {
     const selectedCard = ref(props.modelValue);
     const showHint = ref(true);
     
-    // 修改花色顺序：黑桃、红桃、梅花、方块
+    // 花色和点数
     const cardSuits = ['♠', '♥', '♣', '♦'];
     const cardValues = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
-    // 检查本地存储是否已经展示过提示
+    // 检查本地存储是否已展示过提示
     onMounted(() => {
-      const hintShown = localStorage.getItem('cardSelectorHintShown');
-      if (hintShown) {
+      if (localStorage.getItem('cardSelectorHintShown')) {
         showHint.value = false;
       }
     });
 
-    // 监听props变化同步内部状态
+    // 监听modelValue变化同步内部状态
     watch(() => props.modelValue, (newValue) => {
       selectedCard.value = newValue;
     });
 
-    // 判断是否为红色牌（红桃或方块）
+    // 判断是否为红色牌
     const isRedCard = (card) => {
       return card && (card.includes('♥') || card.includes('♦'));
     };
 
-    const getCardDisplay = (suit, value) => {
-      return `${suit}${value}`;
-    };
+    const getCardDisplay = (suit, value) => `${suit}${value}`;
     
-    // 打开选择器
-    const openSelector = () => {
-      visible.value = true;
-    };
-    
-    // 关闭选择器
-    const closeSelector = () => {
-      visible.value = false;
-    };
+    // 打开/关闭选择器
+    const openSelector = () => { visible.value = true; };
+    const closeSelector = () => { visible.value = false; };
 
-    // 隐藏提示并在localStorage中记录
+    // 隐藏提示
     const dismissHint = () => {
       showHint.value = false;
       localStorage.setItem('cardSelectorHintShown', 'true');
@@ -92,20 +83,13 @@ export default {
 
     // 处理牌选择
     const handleCardSelect = (suit, value) => {
-      let card;
-      if (suit === 'joker') {
-        card = '🃏';
-      } else {
-        card = `${suit}${value}`;
-      }
+      let card = suit === 'joker' ? '🃏' : `${suit}${value}`;
+      
       selectedCard.value = card;
       emit('update:modelValue', card);
       visible.value = false;
       
-      // 用户选择过卡牌后，记录并隐藏提示
-      if (showHint.value) {
-        dismissHint();
-      }
+      if (showHint.value) dismissHint();
     };
 
     return {
@@ -142,12 +126,14 @@ export default {
 .card-selector {
   background: white;
   border-radius: 8px;
-  padding: 20px 10px; /* 进一步减少左右内边距 */
-  width: 90%; /* 减少整体宽度比例 */
-  max-width: 360px; /* 减小最大宽度 */
+  padding: 20px 10px;
+  width: 90%;
+  max-width: 360px;
   max-height: 85%;
   overflow-y: auto;
   box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .card-selector h3 {
@@ -160,24 +146,29 @@ export default {
 .card-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 4px; /* 进一步减少列间距 */
+  gap: 4px;
   margin: 15px 0;
 }
 
 .card-suit-group {
   display: flex;
   flex-direction: column;
-  gap: 6px; /* 减少行间距 */
+  gap: 6px;
 }
 
 .card-option {
-  padding: 8px 3px; /* 减少左右内边距 */
+  padding: 8px 3px;
   text-align: center;
   cursor: pointer;
-  font-size: 20px; /* 增大字体 */
-  transition: transform 0.2s;
+  font-size: 20px;
   background-color: transparent;
   border-radius: 4px;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  position: relative;
 }
 
 .card-option:hover {
@@ -185,26 +176,36 @@ export default {
   transform: scale(1.05);
 }
 
+.card-option:active {
+  outline: none;
+  background-color: #f0f0f0;
+  transform: none;
+}
+
+.card-option:focus {
+  outline: none;
+}
+
 .red-card {
   color: #d32f2f;
 }
 
-/* 重新设计卡片展示区域，更加紧凑 */
 .card-display {
   display: flex;
-  justify-content: center; /* 改为居中布局 */
+  justify-content: center;
   align-items: center;
   background: white;
   border-radius: 8px;
   padding: 12px 15px;
   margin: 12px 0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  position: relative; /* 添加相对定位 */
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .round-info {
-  position: absolute; /* 使用绝对定位 */
-  left: 15px; /* 左侧贴边 */
+  position: absolute;
+  left: 15px;
   font-size: 16px;
   font-weight: 500;
   color: #333;
@@ -217,14 +218,13 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: auto; /* 自动计算左边距 */
-  margin-right: auto; /* 自动计算右边距 */
-  padding-left: 30px; /* 为左侧的局数文本留出空间 */
+  margin: 0 auto;
+  padding-left: 30px;
 }
 
 .selected-card {
-  font-size: 36px;  /* 减小字体大小 */
-  margin-bottom: 2px;  /* 减小下边距 */
+  font-size: 36px;
+  margin-bottom: 2px;
 }
 
 .card-hint {
@@ -239,7 +239,7 @@ export default {
 }
 
 .joker {
-  font-size: 28px; /* 增大小王图标 */
+  font-size: 28px;
   padding: 2px 5px;
   display: flex;
   justify-content: center;
@@ -248,47 +248,62 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .card-display {
-    padding: 10px 12px;
-  }
-  
-  .selected-card {
-    font-size: 32px;
+  .card-selector {
+    width: 95%;
+    max-width: 340px;
+    touch-action: auto;
   }
   
   .card-option {
-    padding: 8px 4px;
-    font-size: 18px; /* 适当增大移动端字体 */
+    padding: 10px 4px;
+    min-height: 44px;
+    font-size: 18px;
+    touch-action: auto;
   }
   
-  .joker {
-    font-size: 26px;
-    padding: 2px 4px;
+  /* 点击反馈效果 */
+  .card-option::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.1);
+    opacity: 0;
+    border-radius: 4px;
+    transition: opacity 0.2s;
+    pointer-events: none;
   }
   
-  .card-selector {
-    width: 95%; /* 移动端略微增大比例 */
-    max-width: 340px; /* 移动端减小最大宽度 */
+  .card-option:active::after {
+    opacity: 1;
   }
   
-  .card-grid {
-    gap: 3px; /* 移动端进一步减小列间距 */
-  }
-
   .round-info {
     font-size: 14px;
     left: 12px;
   }
   
   .card-selection {
-    padding-left: 25px; /* 调整移动端的左边距 */
+    padding-left: 25px;
+  }
+  
+  .selected-card {
+    font-size: 32px;
+  }
+  
+  .joker {
+    font-size: 26px;
+    padding: 8px 4px;
+    min-height: 44px;
   }
 }
 
 /* 针对高度较小的屏幕进行优化 */
 @media (max-height: 700px) {
   .card-option {
-    padding: 6px 3px; /* 进一步减小上下内边距 */
+    padding: 6px 3px;
     font-size: 18px;
   }
   
@@ -297,11 +312,11 @@ export default {
   }
   
   .card-suit-group {
-    gap: 4px; /* 进一步减少行间距 */
+    gap: 4px;
   }
   
   .card-grid {
-    gap: 3px; /* 更小屏幕进一步减少列间距 */
+    gap: 3px;
   }
 }
 </style>
