@@ -270,6 +270,12 @@ export default {
   width: 100%;
   margin-top: 10px;
   background-color: #6c757d;
+  height: 36px; /* 减小按钮高度 */
+  padding: 6px 10px; /* 减小内边距 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px; /* 减小字体大小 */
 }
 
 .action-buttons {

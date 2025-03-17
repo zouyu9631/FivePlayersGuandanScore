@@ -1,6 +1,5 @@
 <template>
   <div class="history-panel">
-    <h3>历史记录</h3>
     <div v-if="gameHistory.length === 0" class="no-history">
       暂无历史记录
     </div>
@@ -8,7 +7,7 @@
       <table class="history-table">
         <thead>
           <tr>
-            <th class="round-col" rowspan="2">局数</th>
+            <th class="round-col" rowspan="2">局</th>
             <th v-for="player in getPlayerNames()" :key="player" colspan="1">{{ player }}</th>
           </tr>
         </thead>
@@ -92,7 +91,7 @@ export default {
 .history-panel {
   background: white;
   border-radius: 8px;
-  padding: 12px;
+  padding: 10px; /* 从12px减小到10px */
   margin-bottom: 15px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   max-height: 300px;
@@ -111,6 +110,7 @@ export default {
   overflow-y: auto;
   overflow-x: auto;
   flex-grow: 1;
+  margin-top: 2px; /* 添加少量顶部边距代替移除的标题 */
 }
 
 .history-table {
@@ -120,19 +120,19 @@ export default {
 }
 
 .history-table th {
-  padding: 8px 4px;
+  padding: 6px 4px; /* 从8px减小到6px */
   text-align: center;
   background-color: #f5f5f5;
   position: sticky;
   top: 0;
   z-index: 1;
   border-bottom: 2px solid #ddd;
-  font-size: 0.95em;
+  font-size: 0.92em; /* 减小字体大小 */
 }
 
 /* 局号格样式 */
 .round-col {
-  width: 50px;
+  width: 40px; /* 从50px减小到40px */
   vertical-align: middle;
 }
 
@@ -234,8 +234,8 @@ export default {
 /* 移动端优化 */
 @media (max-width: 480px) {
   .history-table th {
-    padding: 6px 2px;
-    font-size: 0.85em;
+    padding: 5px 2px; /* 更进一步减小内边距 */
+    font-size: 0.82em;
   }
   
   .role-row td, 
@@ -246,7 +246,7 @@ export default {
   }
   
   .round-col {
-    width: 40px;
+    width: 30px; /* 减小到30px */
   }
   
   .card-cell {

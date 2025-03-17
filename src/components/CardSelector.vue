@@ -1,7 +1,6 @@
 <template>
   <div v-if="visible" class="card-selector-overlay" @click="closeSelector">
     <div class="card-selector" @click.stop>
-      <h3>选择叫牌</h3>
       <div class="card-grid">
         <div v-for="(suit, suitIndex) in cardSuits" :key="suitIndex" class="card-suit-group">
           <div v-for="(value, valueIndex) in cardValues" :key="`${suitIndex}-${valueIndex}`" 
@@ -196,17 +195,18 @@ export default {
   align-items: center;
   background: white;
   border-radius: 8px;
-  padding: 12px 15px;
+  padding: 8px 15px; /* 减小上下内边距从12px到8px */
   margin: 12px 0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   position: relative;
   -webkit-tap-highlight-color: transparent;
+  height: 48px; /* 设置固定高度 */
 }
 
 .round-info {
   position: absolute;
   left: 15px;
-  font-size: 16px;
+  font-size: 17px; /* 增加字体大小从15px到17px */
   font-weight: 500;
   color: #333;
   white-space: nowrap;
@@ -223,19 +223,18 @@ export default {
 }
 
 .selected-card {
-  font-size: 36px;
-  margin-bottom: 2px;
+  font-size: 32px; /* 减小字体大小从36px到32px */
+  margin-bottom: 0; /* 移除底部间距 */
 }
 
 .card-hint {
-  font-size: 12px;
+  font-size: 16px; /* 增加提示文字大小从12px到13px */
   color: #666;
-  padding: 2px 0;
+  padding: 0; /* 移除上下内边距 */
   cursor: pointer;
-}
-
-.card-hint:hover {
-  text-decoration: underline;
+  position: absolute;
+  bottom: 3px; /* 将提示定位到底部 */
+  right: 8px; /* 向右对齐 */
 }
 
 .joker {
@@ -281,7 +280,7 @@ export default {
   }
   
   .round-info {
-    font-size: 14px;
+    font-size: 16px; /* 增加移动端字体大小从14px到16px */
     left: 12px;
   }
   
@@ -290,7 +289,17 @@ export default {
   }
   
   .selected-card {
-    font-size: 32px;
+    font-size: 30px; /* 移动端进一步减小字体 */
+  }
+  
+  .card-hint {
+    font-size: 12px;
+    bottom: 2px;
+  }
+  
+  .card-display {
+    padding: 6px 15px; /* 在移动端进一步减小上下内边距 */
+    height: 46px; /* 调整移动端高度 */
   }
   
   .joker {
