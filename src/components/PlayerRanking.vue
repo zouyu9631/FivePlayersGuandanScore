@@ -6,11 +6,11 @@
       item-key="name"
       ghost-class="ghost-placeholder" 
       chosen-class="chosen-item"
-      :animation="0"
+      :animation="150"
       handle=".drag-handle"
-      :delay="50"
+      :delay="0"
       :delayOnTouchOnly="true"
-      :touchStartThreshold="3"
+      :touchStartThreshold="1"
       :forceFallback="true" 
       fallback-class="sortable-drag"
       :fallback-on-body="true"
@@ -101,15 +101,17 @@ export default {
 .player-rank {
   display: flex;
   align-items: center;
-  padding: 12px 0;
+  padding: 8px 0; /* 减小垂直内边距，使高度更紧凑 */
   background: #f9f9f9;
   border: 1px solid #eee;
   border-radius: 6px;
   margin-bottom: 8px;
   transition: background 0.2s, transform 0.1s;
-  touch-action: none; /* 禁用默认的触摸行为 */
+  touch-action: pan-y; /* 允许垂直滚动 */
   z-index: 1;
   position: relative;
+  height: 40px; /* 固定高度，与拖拽时保持一致 */
+  box-sizing: border-box;
 }
 
 .player-rank:hover {
@@ -123,9 +125,9 @@ export default {
   cursor: move;
   cursor: -webkit-grab;
   cursor: grab;
-  touch-action: none;
+  touch-action: none; /* 仅在拖动手柄处禁用默认触摸行为 */
   min-width: 40px;
-  min-height: 40px;
+  height: 40px; /* 与外层保持一致 */
   justify-content: center;
   user-select: none;
   -webkit-user-select: none;
@@ -207,27 +209,12 @@ export default {
   box-shadow: none !important;
 }
 
-/* 拖拽过程中原位置的样式 - 完全隐藏 */
-.ghost-empty {
-  opacity: 0 !important;
-  height: 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  margin: 0 !important;
-  border: none !important;
-  overflow: hidden !important;
-  min-height: 0 !important;
-  visibility: hidden !important;
-  transform: scaleY(0);
-  transition: none !important;
-}
-
 /* 拖拽时原位置的样式 - 显示占位符 */
 .ghost-placeholder {
   border: 2px dashed #1976d2 !important;
   background-color: rgba(25, 118, 210, 0.1) !important;
   opacity: 0.5 !important;
-  height: 40px !important; /* 修复了这里的错误 */
+  height: 40px !important; /* 与静态元素高度保持一致 */
   min-height: 40px !important;
   visibility: visible !important;
   transform: none !important;
@@ -235,46 +222,46 @@ export default {
   padding: 0 !important;
   margin-bottom: 8px !important;
   border-radius: 6px !important;
+  box-sizing: border-box !important;
 }
 
-/* 正在拖拽的元素样式 */
+/* 正在拖拽的元素样式 - 合并两个相同选择器的样式 */
 .sortable-drag {
-  opacity: 0.95 !important;
-  background: white !important; /* 修正 !重要 为 !important */
-  transform: scale(1.02);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  opacity: 0.99 !important;
+  background: white !important;
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
   z-index: 2000;
   pointer-events: none;
   transition: none !important;
   border-radius: 6px !important;
   border: 1px solid #ddd !important;
+  height: 40px !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
-/* 被选中的元素样式 */
+/* 被选中的元素样式 - 修改为不透明，避免闪烁 */
 .chosen-item {
-  opacity: 0 !important;
+  opacity: 1 !important; /* 改为1，保持可见 */
+  /* 可以添加其他视觉提示，表示此元素已被选中 */
+  background-color: #f0f0f0 !important;
+  z-index: 1;
+  position: relative;
 }
 
-/* 拖拽状态 */
+/* 拖拽状态 - 合并重复的定义 */
 .dragging {
+  cursor: -webkit-grabbing !important;
   cursor: grabbing !important;
-}
-
-.sortable-drag {
-  opacity: 0.99 !important;
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  z-index: 10;
-}
-
-.dragging {
-  cursor: -webkit-grabbing;
-  cursor: grabbing;
 }
 
 @media (max-width: 768px) {
   .player-rank {
-    padding: 12px 8px;
+    padding: 0;
+    height: 44px; /* 移动端稍微增加高度 */
   }
   
   .rank-number {
@@ -283,7 +270,7 @@ export default {
   
   .drag-handle {
     padding: 0 8px;
-    min-height: 44px;
+    height: 44px; /* 与外层保持一致 */
     display: flex;
     align-items: center;
     min-width: 44px; /* 确保移动端有足够大的触摸区域 */
@@ -302,8 +289,8 @@ export default {
 
   /* 移动端的占位符样式 */
   .ghost-placeholder {
-    height: 50px !important;
-    min-height: 50px !important;
+    height: 44px !important; /* 与移动端静态元素保持一致 */
+    min-height: 44px !important; /* 修正这里的中文符号 */
     border: 2px dashed #1976d2 !important;
     background-color: rgba(25, 118, 210, 0.15) !important;
     opacity: 0.7 !important;
@@ -311,6 +298,7 @@ export default {
   
   /* 移动端拖拽元素样式强化 */
   .sortable-drag {
+    height: 44px !important; /* 与移动端静态元素保持一致 */
     opacity: 0.98 !important;
     transform: scale(1.03);
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
