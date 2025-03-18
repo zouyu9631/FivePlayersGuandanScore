@@ -1,11 +1,16 @@
 <template>
-  <div class="confirmation-overlay">
-    <div class="confirmation-dialog">
+  <!-- 添加 @touchmove.prevent 到确认框外层，防止拖动屏幕滚动 -->
+  <div class="confirmation-overlay" @click="$emit('cancel')" @touchmove.prevent>
+    <div class="confirmation-dialog" @click.stop>
       <h3>请确认游戏信息</h3>
       <div class="confirmation-content">
-        <p>叫牌：{{ calledCard }}</p>
+        <p>
+          叫牌：
+          <span :class="{ 'red-card': isRedCard(calledCard) }">
+            {{ calledCard }}
+          </span>
+        </p>
         <div class="confirmation-ranks">
-          <p>排名：</p>
           <div v-for="(player, index) in playerRanking" :key="player.name" class="confirm-player-rank">
             <span>{{ getRankName(index) }}： {{ player.name }} 
               <span v-if="player.name === emperor && player.name !== guard" class="emperor-indicator">👑</span>
@@ -36,13 +41,17 @@ export default {
     scoreChanges: Object
   },
   emits: ['confirm', 'cancel'],
-  setup() {
+  setup(props) {
     const getRankName = (index) => {
       const ranks = ['头游', '二游', '三游', '四游', '末游'];
       return ranks[index];
     };
 
-    return { getRankName };
+    const isRedCard = (card) => {
+      return card && (card.includes('♥') || card.includes('♦'));
+    };
+
+    return { getRankName, isRedCard };
   }
 };
 </script>
@@ -65,8 +74,10 @@ export default {
   background: white;
   border-radius: 8px;
   padding: 20px;
-  width: 90%;
-  max-width: 500px;
+  display: inline-block;
+  width: auto;
+  max-width: 90%;
+  min-width: 200px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
@@ -92,6 +103,7 @@ export default {
 .confirmation-buttons {
   display: flex;
   justify-content: space-between;
+  gap: 20px; /* 新增：为按钮间增加空隙 */
   margin-top: 20px;
 }
 
@@ -117,5 +129,9 @@ export default {
 
 .self-guard-indicator {
   color: #ff9800;
+}
+
+.red-card {
+  color: #d32f2f;
 }
 </style>

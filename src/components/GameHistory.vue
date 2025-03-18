@@ -25,7 +25,11 @@
             </tr>
             <!-- 第二行：叫牌 + 分数信息 -->
             <tr class="score-row">
-              <td class="card-cell">{{ round.calledCard }}</td>
+              <td class="card-cell">
+                <span :class="{ 'red-card': isRedCard(round.calledCard) }">
+                  {{ round.calledCard }}
+                </span>
+              </td>
               <td v-for="player in getPlayerNames()" :key="`${i}-${player}-score`" 
                   :class="{ 
                     'positive': (round.scoreChanges[player] || 0) > 0, 
@@ -64,6 +68,9 @@ export default {
       });
       
       return Array.from(playerNames);
+    },
+    isRedCard(card) {
+      return card && (card.includes('♥') || card.includes('♦'));
     }
   },
   mounted() {
@@ -256,5 +263,9 @@ export default {
   .role-icon {
     font-size: 16px;
   }
+}
+
+.red-card {
+  color: #d32f2f;
 }
 </style>
