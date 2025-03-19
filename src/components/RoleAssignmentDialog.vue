@@ -21,9 +21,8 @@
         </button>
         
         <button 
-          @click="$emit('remove', player)" 
-          class="role-btn remove-role-btn" 
-          :disabled="!hasRole">
+          @click="handleRemoveOrClose" 
+          class="role-btn remove-role-btn">
           <span class="role-icon">❌</span>
         </button>
       </div>
@@ -47,10 +46,19 @@ export default {
   
   emits: ['close', 'assign', 'remove'],
   
-  setup(props) {
+  setup(props, { emit }) {
     const isEmperor = computed(() => props.player === props.currentEmperor);
     const isGuard = computed(() => props.player === props.currentGuard);
     const hasRole = computed(() => isEmperor.value || isGuard.value);
+    
+    // 处理移除或关闭
+    const handleRemoveOrClose = () => {
+      if (hasRole.value) {
+        emit('remove', props.player);
+      } else {
+        emit('close');
+      }
+    };
     
     // 计算对话框位置
     const dialogStyle = ref({});
@@ -94,7 +102,8 @@ export default {
       isEmperor,
       isGuard,
       hasRole,
-      dialogStyle
+      dialogStyle,
+      handleRemoveOrClose
     };
   }
 };
@@ -186,12 +195,7 @@ export default {
   border-color: #ffcdd2;
 }
 
-.remove-role-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.remove-role-btn:not(:disabled):hover {
+.remove-role-btn:hover {
   background-color: #ffcdd2;
 }
 
