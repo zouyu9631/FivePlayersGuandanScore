@@ -8,7 +8,7 @@
           <input 
             type="text" 
             v-model="player.name" 
-            :placeholder="`玩家${index + 1}`" 
+            :placeholder="defaultNames[index]" 
             maxlength="8" 
             @blur="validateName(index)"
             @focus="onFocus(index)"
@@ -32,6 +32,8 @@ import { ref } from 'vue';
 export default {
   emits: ['start-game'],
   setup(props, { emit }) {
+    const defaultNames = ["关羽", "张飞", "赵云", "马超", "黄忠"];
+    
     const players = ref([
       { name: '', score: 0 },
       { name: '', score: 0 },
@@ -41,12 +43,12 @@ export default {
     ]);
 
     const isDefaultName = (index) => {
-      return !players.value[index].name || players.value[index].name === `玩家${index + 1}`;
+      return !players.value[index].name || players.value[index].name === defaultNames[index];
     };
 
     const onFocus = (index) => {
       // 当用户点击输入框时，确保内容为空，方便输入
-      if (players.value[index].name === `玩家${index + 1}`) {
+      if (players.value[index].name === defaultNames[index]) {
         players.value[index].name = '';
       }
     };
@@ -54,13 +56,41 @@ export default {
     const validateName = (index) => {
       // 检查空名字
       if (!players.value[index].name.trim()) {
-        players.value[index].name = `玩家${index + 1}`;
+        players.value[index].name = defaultNames[index];
+        return;
       }
       
-      // 检查名字长度
+      // 检查名字长度 - 限制为4个汉字或8个英文/数字
       const name = players.value[index].name.trim();
-      if (name.length > 8) {
-        players.value[index].name = name.substring(0, 8);
+      const chineseRegex = /[\u4e00-\u9fa5]/g;
+      const chineseChars = name.match(chineseRegex) || [];
+      const chineseLength = chineseChars.length;
+      const otherLength = name.length - chineseLength;
+      
+      // 如果汉字超过4个或总长度超过8个字符，进行截断
+      if (chineseLength > 4 || (chineseLength * 2 + otherLength) > 8) {
+        let result = '';
+        let currentChineseCount = 0;
+        let currentTotalLength = 0;
+        
+        for (const char of name) {
+          const isChineseChar = /[\u4e00-\u9fa5]/.test(char);
+          
+          if (isChineseChar) {
+            if (currentChineseCount < 4 && currentTotalLength < 8) {
+              result += char;
+              currentChineseCount++;
+              currentTotalLength += 2; // 汉字算两个字符长度
+            }
+          } else {
+            if (currentTotalLength < 8) {
+              result += char;
+              currentTotalLength++;
+            }
+          }
+        }
+        
+        players.value[index].name = result;
       }
       
       // 检查重复名字
@@ -82,6 +112,7 @@ export default {
 
     return {
       players,
+      defaultNames,
       startGame,
       validateName,
       onFocus,
