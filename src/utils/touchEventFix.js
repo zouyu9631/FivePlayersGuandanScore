@@ -24,7 +24,6 @@ export function setupTouchEventFix() {
   document.addEventListener('drop', function(e) {
     e.preventDefault();
     
-    // 移除所有隐藏的ghost元素
     setTimeout(() => {
       const ghosts = document.querySelectorAll('.ghost, .ghost-empty, .sortable-ghost');
       ghosts.forEach(ghost => {
@@ -55,7 +54,6 @@ export function setupTouchEventFix() {
   document.addEventListener('dragend', function() {
     document.body.classList.remove('dragging-active');
     
-    // 移除所有隐藏的ghost元素
     setTimeout(() => {
       const ghosts = document.querySelectorAll('.ghost, .ghost-empty, .sortable-ghost');
       ghosts.forEach(ghost => {

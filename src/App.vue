@@ -2,19 +2,12 @@
   <div class="app">
     <PlayerSetup v-if="gameState === 'setup'" @start-game="startGame" />
     <GameBoard 
-      v-else-if="gameState === 'playing'" 
+      v-else
       :players="players" 
       :gameHistory="gameHistory"
       :currentRound="currentRound"
-      @end-game="endGame"
+      @end-game="resetToSetup"
       @update-history="updateHistory"
-    />
-    <GameResults 
-      v-else 
-      :players="players" 
-      :gameHistory="gameHistory" 
-      @new-game="resetGame"
-      @return-to-home="gameState = 'setup'"
     />
   </div>
 </template>
@@ -23,16 +16,14 @@
 import { ref } from 'vue';
 import PlayerSetup from './components/PlayerSetup.vue';
 import GameBoard from './components/GameBoard.vue';
-import GameResults from './components/GameResults.vue';
 
 export default {
   components: {
     PlayerSetup,
-    GameBoard,
-    GameResults
+    GameBoard
   },
   setup() {
-    const gameState = ref('setup'); // setup, playing, ended
+    const gameState = ref('setup'); // setup, playing
     const players = ref([]);
     const gameHistory = ref([]);
     const currentRound = ref(1);
@@ -65,18 +56,10 @@ export default {
       saveGameState();
     };
 
-    const endGame = () => {
-      gameState.value = 'ended';
-      saveGameState();
-    };
-
-    const resetGame = () => {
-      gameState.value = 'playing';
-      gameHistory.value = [];
-      currentRound.value = 1;
-      // 重置分数
-      players.value = players.value.map(p => ({...p, score: 0}));
-      saveGameState();
+    // 直接回到设置页面
+    const resetToSetup = () => {
+      gameState.value = 'setup';
+      localStorage.removeItem('guandanGame'); // 清除存档
     };
 
     const saveGameState = () => {
@@ -95,8 +78,7 @@ export default {
       currentRound,
       startGame,
       updateHistory,
-      endGame,
-      resetGame
+      resetToSetup
     };
   }
 };

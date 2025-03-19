@@ -63,26 +63,21 @@ export default {
   emits: ['update:modelValue', 'select-player'],
   
   setup(props, { emit }) {
-    // 计算属性，用于双向绑定
     const internalValue = computed({
       get: () => props.modelValue,
       set: (value) => emit('update:modelValue', value)
     });
 
-    // 确保在移动端上拖拽更加顺畅
     onMounted(() => {
-      // 添加触摸事件处理
       const dragHandles = document.querySelectorAll('.drag-handle');
       
       dragHandles.forEach(handle => {
         handle.addEventListener('touchstart', (e) => {
-          // 阻止长按菜单等默认行为
           e.preventDefault();
         }, { passive: false });
       });
     });
 
-    // 添加点击处理函数，获取点击位置
     const handlePlayerClick = (event, playerName) => {
       const position = {
         x: event.clientX,
@@ -111,16 +106,16 @@ export default {
 .player-rank {
   display: flex;
   align-items: center;
-  padding: 8px 0; /* 减小垂直内边距，使高度更紧凑 */
+  padding: 8px 0;
   background: #f9f9f9;
   border: 1px solid #eee;
   border-radius: 6px;
   margin-bottom: 8px;
   transition: background 0.2s, transform 0.1s;
-  touch-action: pan-y; /* 允许垂直滚动 */
+  touch-action: pan-y;
   z-index: 1;
   position: relative;
-  height: 40px; /* 固定高度，与拖拽时保持一致 */
+  height: 40px;
   box-sizing: border-box;
 }
 
@@ -135,9 +130,9 @@ export default {
   cursor: move;
   cursor: -webkit-grab;
   cursor: grab;
-  touch-action: none; /* 仅在拖动手柄处禁用默认触摸行为 */
+  touch-action: none;
   min-width: 40px;
-  height: 40px; /* 与外层保持一致 */
+  height: 40px;
   justify-content: center;
   user-select: none;
   -webkit-user-select: none;
@@ -167,13 +162,12 @@ export default {
   flex-grow: 1;
   padding: 5px 10px;
   border-radius: 4px;
-  background: transparent; /* 确保名字本身没有背景色 */
-  border: none; /* 移除任何可能的边框 */
+  background: transparent;
+  border: none;
 }
 
-/* 移动端显示点击效果 */
 .player-name:active {
-  opacity: 0.7; /* 使用透明度代替背景色变化 */
+  opacity: 0.7;
 }
 
 .role-indicators {
@@ -188,11 +182,11 @@ export default {
 }
 
 .emperor-indicator, .guard-indicator, .self-guard-indicator {
-  opacity: 1; /* 确保图标完全不透明 */
+  opacity: 1;
 }
 
 .self-guard-indicator {
-  color: #ff9800; /* 使自保标志颜色更加明显 */
+  color: #ff9800;
   font-weight: bold;
 }
 
@@ -211,7 +205,6 @@ export default {
   border-color: #ffca28;
 }
 
-/* 解决拖拽时的残影问题 */
 .ghost {
   opacity: 0.3 !important;
   background-color: transparent !important;
@@ -219,12 +212,11 @@ export default {
   box-shadow: none !important;
 }
 
-/* 拖拽时原位置的样式 - 显示占位符 */
 .ghost-placeholder {
   border: 2px dashed #1976d2 !important;
   background-color: rgba(25, 118, 210, 0.1) !important;
   opacity: 0.5 !important;
-  height: 40px !important; /* 与静态元素高度保持一致 */
+  height: 40px !important;
   min-height: 40px !important;
   visibility: visible !important;
   transform: none !important;
@@ -235,7 +227,6 @@ export default {
   box-sizing: border-box !important;
 }
 
-/* 正在拖拽的元素样式 - 合并两个相同选择器的样式 */
 .sortable-drag {
   opacity: 0.99 !important;
   background: white !important;
@@ -248,21 +239,18 @@ export default {
   border: 1px solid #ddd !important;
   height: 40px !important;
   padding: 0 !important;
-  box-sizing: border-box !重要;
+  box-sizing: border-box !important;
   display: flex !important;
   align-items: center !important;
 }
 
-/* 被选中的元素样式 - 修改为不透明，避免闪烁 */
 .chosen-item {
-  opacity: 1 !important; /* 改为1，保持可见 */
-  /* 可以添加其他视觉提示，表示此元素已被选中 */
+  opacity: 1 !important;
   background-color: #f0f0f0 !important;
   z-index: 1;
   position: relative;
 }
 
-/* 拖拽状态 - 合并重复的定义 */
 .dragging {
   cursor: -webkit-grabbing !important;
   cursor: grabbing !important;
@@ -271,7 +259,7 @@ export default {
 @media (max-width: 768px) {
   .player-rank {
     padding: 0;
-    height: 44px; /* 移动端稍微增加高度 */
+    height: 44px;
   }
   
   .rank-number {
@@ -280,10 +268,10 @@ export default {
   
   .drag-handle {
     padding: 0 8px;
-    height: 44px; /* 与外层保持一致 */
+    height: 44px;
     display: flex;
     align-items: center;
-    min-width: 44px; /* 确保移动端有足够大的触摸区域 */
+    min-width: 44px;
   }
 
   .drag-icon {
@@ -291,24 +279,21 @@ export default {
     padding: 5px;
   }
   
-  /* 视觉指示这是可拖动的 */
   .drag-handle:active {
     background-color: rgba(0,0,0,0.1);
     border-radius: 4px;
   }
 
-  /* 移动端的占位符样式 */
   .ghost-placeholder {
-    height: 44px !important; /* 与移动端静态元素保持一致 */
-    min-height: 44px !important; /* 修正这里的语法错误 */
+    height: 44px !important;
+    min-height: 44px !important;
     border: 2px dashed #1976d2 !important;
     background-color: rgba(25, 118, 210, 0.15) !important;
-    opacity: 0.7 !important; /* 修复这里的语法错误 */
+    opacity: 0.7 !important;
   }
   
-  /* 移动端拖拽元素样式强化 */
   .sortable-drag {
-    height: 44px !important; /* 与移动端静态元素保持一致 */
+    height: 44px !important;
     opacity: 0.98 !important;
     transform: scale(1.03);
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
@@ -319,14 +304,12 @@ export default {
     padding: 5px 8px;
   }
   
-  /* 视觉指示这是可点击的区域，但不使用背景色 */
   .player-name:active {
     opacity: 0.65;
     transition: opacity 0.1s;
   }
 }
 
-/* 高对比度模式支持 */
 @media (forced-colors: active) {
   .player-rank {
     forced-color-adjust: none;
