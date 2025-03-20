@@ -8,7 +8,7 @@
         <thead>
           <tr>
             <th class="round-col" rowspan="2">局</th>
-            <th v-for="player in getPlayerNames()" :key="player" colspan="1">{{ player }}</th>
+            <th v-for="player in sortedPlayerNames" :key="player" colspan="1">{{ player }}</th>
           </tr>
         </thead>
         <tbody>
@@ -16,7 +16,7 @@
             <!-- 第一行：局号 + 角色信息 -->
             <tr class="role-row">
               <td class="round-cell">{{ i + 1 }}</td>
-              <td v-for="player in getPlayerNames()" :key="`${i}-${player}-role`" class="role-cell">
+              <td v-for="player in sortedPlayerNames" :key="`${i}-${player}-role`" class="role-cell">
                 <span v-if="player === round.emperor && player !== round.guard" class="role-icon emperor-icon" title="皇帝">👑</span>
                 <span v-else-if="player === round.guard && player !== round.emperor" class="role-icon guard-icon" title="侍卫">🛡️</span>
                 <span v-else-if="player === round.emperor && player === round.guard" class="role-icon self-guard-icon" title="皇帝自保">👑🛡️</span>
@@ -30,7 +30,7 @@
                   {{ round.calledCard }}
                 </span>
               </td>
-              <td v-for="player in getPlayerNames()" :key="`${i}-${player}-score`" 
+              <td v-for="player in sortedPlayerNames" :key="`${i}-${player}-score`" 
                   :class="{ 
                     'positive': (round.scoreChanges[player] || 0) > 0, 
                     'negative': (round.scoreChanges[player] || 0) < 0,
@@ -53,13 +53,18 @@ export default {
     gameHistory: {
       type: Array,
       required: true
+    },
+    players: {
+      type: Array,
+      required: true
     }
   },
-  methods: {
-    getPlayerNames() {
-      // 获取所有玩家名称
+  computed: {
+    // 按照总分页面相同的顺序排列玩家
+    sortedPlayerNames() {
       if (this.gameHistory.length === 0) return [];
       
+      // 从历史记录中获取所有玩家名称
       const playerNames = new Set();
       this.gameHistory.forEach(round => {
         Object.keys(round.scoreChanges).forEach(name => {
@@ -67,8 +72,18 @@ export default {
         });
       });
       
-      return Array.from(playerNames);
-    },
+      // 使用players数组中的顺序排序
+      const result = Array.from(playerNames);
+      result.sort((a, b) => {
+        const indexA = this.players.findIndex(p => p.name === a);
+        const indexB = this.players.findIndex(p => p.name === b);
+        return indexA - indexB;
+      });
+      
+      return result;
+    }
+  },
+  methods: {
     isRedCard(card) {
       return card && (card.includes('♥') || card.includes('♦'));
     }

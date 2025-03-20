@@ -45,7 +45,13 @@ export default {
     }
 
     const startGame = (newPlayers) => {
-      players.value = newPlayers;
+      // 完全重置玩家数据，确保得分为0
+      players.value = newPlayers.map(player => ({
+        name: player.name,
+        score: 0
+      }));
+      gameHistory.value = []; // 清空历史记录
+      currentRound.value = 1; // 重置局数
       gameState.value = 'playing';
       saveGameState();
     };
@@ -53,12 +59,37 @@ export default {
     const updateHistory = (roundData) => {
       gameHistory.value.push(roundData);
       currentRound.value++;
+      
+      // 验证计算结果
+      let expectedScores = {};
+      players.value.forEach(p => {
+        expectedScores[p.name] = 0;
+      });
+      
+      // 从历史记录重新计算总分
+      gameHistory.value.forEach((round) => {
+        Object.keys(round.scoreChanges).forEach(playerName => {
+          expectedScores[playerName] = (expectedScores[playerName] || 0) + Number(round.scoreChanges[playerName]);
+        });
+      });
+      
+      // 自动修正不一致的分数
+      players.value.forEach(p => {
+        if (p.score !== expectedScores[p.name]) {
+          p.score = expectedScores[p.name];
+        }
+      });
+      
       saveGameState();
     };
 
     // 直接回到设置页面
     const resetToSetup = () => {
       gameState.value = 'setup';
+      // 完全清除所有数据
+      players.value = [];
+      gameHistory.value = [];
+      currentRound.value = 1;
       localStorage.removeItem('guandanGame'); // 清除存档
     };
 

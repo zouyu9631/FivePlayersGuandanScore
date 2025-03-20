@@ -9,7 +9,7 @@
     />
 
     <!-- 历史记录组件 -->
-    <GameHistory v-if="showHistory" :gameHistory="gameHistory" />
+    <GameHistory v-if="showHistory" :gameHistory="gameHistory" :players="players" />
 
     <!-- 叫牌区域 -->
     <CardSelector v-model="calledCard" :currentRound="currentRound" />
@@ -133,7 +133,9 @@ export default {
     
     const handleEndGame = () => showGameSummary.value = true;
     
-    const confirmEndGame = () => emit('end-game');
+    const confirmEndGame = () => {
+      emit('end-game');
+    };
 
     const checkRequiredInfo = () => {
       if (!emperor.value) {
@@ -161,7 +163,9 @@ export default {
     const confirmScore = () => {
       // 更新玩家总分
       props.players.forEach(player => {
-        player.score += scoreChanges[player.name] || 0;
+        // 确保分数是数值类型
+        const scoreChange = Number(scoreChanges[player.name] || 0);
+        player.score = Number(player.score || 0) + scoreChange;
       });
       
       // 记录本轮数据
