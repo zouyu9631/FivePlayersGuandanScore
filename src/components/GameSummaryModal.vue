@@ -254,9 +254,8 @@ export default {
     };
 
     const confirmEndGame = () => {
-      if (confirm("确定要结束游戏吗？将清除所有游戏数据并重新开始。")) {
-        emit('end');
-      }
+      // 移除确认对话框，直接结束游戏
+      emit('end');
     };
 
     return { 
