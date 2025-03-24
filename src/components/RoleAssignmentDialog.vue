@@ -32,6 +32,7 @@
 
 <script>
 import { computed, ref, onMounted } from 'vue';
+import { calculateDialogPosition } from '../utils/uiUtils';
 
 export default {
   props: {
@@ -64,39 +65,8 @@ export default {
     const dialogStyle = ref({});
     
     onMounted(() => {
-      calculatePosition();
+      dialogStyle.value = calculateDialogPosition(props.position);
     });
-    
-    const calculatePosition = () => {
-      // 更准确的容器尺寸估算
-      const dialogWidth = 220;
-      const dialogHeight = 140; // 减小高度估计值，更符合实际
-      
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-      
-      // 如果位置坐标存在
-      if (props.position.x && props.position.y) {
-        let left = Math.max(10, Math.min(windowWidth - dialogWidth - 10, props.position.x - dialogWidth / 2));
-        let top;
-        
-        // 优化垂直位置计算逻辑
-        if (props.position.y > windowHeight / 2) {
-          // 点击位置在屏幕下半部分，显示在上方
-          top = Math.max(10, props.position.y - dialogHeight - 10);
-        } else {
-          // 点击位置在屏幕上半部分，显示在下方
-          top = Math.min(windowHeight - dialogHeight - 10, props.position.y + 10);
-        }
-        
-        dialogStyle.value = {
-          position: 'absolute',
-          left: `${left}px`,
-          top: `${top}px`,
-          transform: 'none'
-        };
-      }
-    };
     
     return {
       isEmperor,

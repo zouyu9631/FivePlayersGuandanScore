@@ -35,6 +35,9 @@
 </template>
 
 <script>
+import { isRedCard } from '../utils/cardUtils';
+import { getRankName } from '../utils/gameUtils';
+
 export default {
   props: {
     calledCard: String,
@@ -45,15 +48,6 @@ export default {
   },
   emits: ['confirm', 'cancel'],
   setup(props) {
-    const getRankName = (index) => {
-      const ranks = ['头游', '二游', '三游', '四游', '末游'];
-      return ranks[index];
-    };
-
-    const isRedCard = (card) => {
-      return card && (card.includes('♥') || card.includes('♦'));
-    };
-
     return { getRankName, isRedCard };
   }
 };

@@ -7,12 +7,8 @@
     <div class="player-scores">
       <div v-for="player in players" :key="player.name" class="player-score">
         <span>{{ player.name }}</span>
-        <span :class="{ 
-          'positive': player.score > 0, 
-          'negative': player.score < 0,
-          'zero-score': player.score === 0 
-        }">
-          {{ player.score > 0 ? '+' : '' }}{{ player.score }}
+        <span :class="getScoreClass(player.score)">
+          {{ formatScore(player.score) }}
         </span>
       </div>
     </div>
@@ -23,6 +19,8 @@
 </template>
 
 <script>
+import { getScoreClass, formatScore } from '../utils/gameUtils';
+
 export default {
   props: {
     players: {
@@ -34,7 +32,10 @@ export default {
       default: false
     }
   },
-  emits: ['end-game', 'toggle-history']
+  emits: ['end-game', 'toggle-history'],
+  setup() {
+    return { getScoreClass, formatScore };
+  }
 };
 </script>
 

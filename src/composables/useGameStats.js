@@ -1,18 +1,7 @@
 import { computed } from 'vue';
+import { formatScore, getScoreClass } from '../utils/gameUtils';
 
 export function useGameStats(players, gameHistory) {
-  // 格式化得分的辅助函数
-  const formatScore = (score) => {
-    return score > 0 ? `+${score}` : `${score}`;
-  };
-
-  // 获取样式类
-  const getScoreClass = (score) => {
-    if (score > 0) return 'positive';
-    if (score < 0) return 'negative';
-    return 'zero-score';
-  };
-
   // 皇帝队胜率
   const emperorTeamWinRate = computed(() => {
     if (gameHistory.value.length === 0) return 0;

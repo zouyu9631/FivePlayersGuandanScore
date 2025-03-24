@@ -16,6 +16,7 @@
 import { ref } from 'vue';
 import PlayerSetup from './components/PlayerSetup.vue';
 import GameBoard from './components/GameBoard.vue';
+import { loadGameState, saveGameState, clearGameState } from './utils/storageUtils';
 
 export default {
   components: {
@@ -29,18 +30,13 @@ export default {
     const currentRound = ref(1);
 
     // 检查是否有存储的游戏
-    const savedGame = localStorage.getItem('guandanGame');
+    const savedGame = loadGameState();
     if (savedGame) {
-      try {
-        const parsedGame = JSON.parse(savedGame);
-        if (parsedGame.players && parsedGame.gameState) {
-          players.value = parsedGame.players;
-          gameHistory.value = parsedGame.gameHistory || [];
-          gameState.value = parsedGame.gameState;
-          currentRound.value = parsedGame.currentRound || 1;
-        }
-      } catch (e) {
-        console.error('Failed to parse saved game', e);
+      if (savedGame.players && savedGame.gameState) {
+        players.value = savedGame.players;
+        gameHistory.value = savedGame.gameHistory || [];
+        gameState.value = savedGame.gameState;
+        currentRound.value = savedGame.currentRound || 1;
       }
     }
 
@@ -53,7 +49,12 @@ export default {
       gameHistory.value = []; // 清空历史记录
       currentRound.value = 1; // 重置局数
       gameState.value = 'playing';
-      saveGameState();
+      saveGameState({
+        players: players.value,
+        gameHistory: gameHistory.value,
+        gameState: gameState.value,
+        currentRound: currentRound.value
+      });
     };
 
     const updateHistory = (roundData) => {
@@ -80,7 +81,12 @@ export default {
         }
       });
       
-      saveGameState();
+      saveGameState({
+        players: players.value,
+        gameHistory: gameHistory.value,
+        gameState: gameState.value,
+        currentRound: currentRound.value
+      });
     };
 
     // 直接回到设置页面
@@ -90,16 +96,7 @@ export default {
       players.value = [];
       gameHistory.value = [];
       currentRound.value = 1;
-      localStorage.removeItem('guandanGame'); // 清除存档
-    };
-
-    const saveGameState = () => {
-      localStorage.setItem('guandanGame', JSON.stringify({
-        players: players.value,
-        gameHistory: gameHistory.value,
-        gameState: gameState.value,
-        currentRound: currentRound.value
-      }));
+      clearGameState(); // 清除存档
     };
 
     return {

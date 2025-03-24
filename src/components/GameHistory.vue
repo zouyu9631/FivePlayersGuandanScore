@@ -36,7 +36,7 @@
                     'negative': (round.scoreChanges[player] || 0) < 0,
                     'score-cell': true
                   }">
-                {{ (round.scoreChanges[player] > 0 ? '+' : '') + (round.scoreChanges[player] || 0) }}
+                {{ formatScore(round.scoreChanges[player] || 0) }}
               </td>
             </tr>
           </template>
@@ -47,6 +47,9 @@
 </template>
 
 <script>
+import { isRedCard } from '../utils/cardUtils';
+import { formatScore, getScoreClass } from '../utils/gameUtils';
+
 export default {
   name: 'GameHistory',
   props: {
@@ -84,9 +87,9 @@ export default {
     }
   },
   methods: {
-    isRedCard(card) {
-      return card && (card.includes('♥') || card.includes('♦'));
-    }
+    isRedCard,
+    formatScore,
+    getScoreClass
   },
   mounted() {
     // 确保显示最新的记录

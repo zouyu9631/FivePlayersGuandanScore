@@ -41,6 +41,7 @@
 <script>
 import { ref } from 'vue';
 import RulesModal from './RulesModal.vue';
+import { validatePlayerName } from '../utils/validationUtils';
 
 export default {
   components: {
@@ -49,7 +50,6 @@ export default {
   emits: ['start-game'],
   setup(props, { emit }) {
     const defaultNames = ["关羽", "张飞", "赵云", "马超", "黄忠"];
-    // 添加规则显示状态变量
     const showRules = ref(false);
     
     const players = ref([
@@ -72,54 +72,17 @@ export default {
     };
 
     const validateName = (index) => {
-      // 检查空名字
-      if (!players.value[index].name.trim()) {
-        players.value[index].name = defaultNames[index];
-        return;
-      }
-      
-      // 检查名字长度 - 限制为4个汉字或8个英文/数字
-      const name = players.value[index].name.trim();
-      const chineseRegex = /[\u4e00-\u9fa5]/g;
-      const chineseChars = name.match(chineseRegex) || [];
-      const chineseLength = chineseChars.length;
-      const otherLength = name.length - chineseLength;
-      
-      // 如果汉字超过4个或总长度超过8个字符，进行截断
-      if (chineseLength > 4 || (chineseLength * 2 + otherLength) > 8) {
-        let result = '';
-        let currentChineseCount = 0;
-        let currentTotalLength = 0;
+      const existingNames = players.value
+        .filter((_, i) => i !== index)
+        .map(p => p.name);
         
-        for (const char of name) {
-          const isChineseChar = /[\u4e00-\u9fa5]/.test(char);
-          
-          if (isChineseChar) {
-            if (currentChineseCount < 4 && currentTotalLength < 8) {
-              result += char;
-              currentChineseCount++;
-              currentTotalLength += 2; // 汉字算两个字符长度
-            }
-          } else {
-            if (currentTotalLength < 8) {
-              result += char;
-              currentTotalLength++;
-            }
-          }
-        }
-        
-        players.value[index].name = result;
-      }
+      const result = validatePlayerName(
+        players.value[index].name, 
+        existingNames, 
+        defaultNames[index]
+      );
       
-      // 检查重复名字
-      const duplicateCount = players.value.filter(p => p.name === players.value[index].name).length;
-      if (duplicateCount > 1) {
-        let counter = 1;
-        while (players.value.some(p => p !== players.value[index] && p.name === `${players.value[index].name}${counter}`)) {
-          counter++;
-        }
-        players.value[index].name = `${players.value[index].name}${counter}`;
-      }
+      players.value[index].name = result.processedName;
     };
 
     const startGame = () => {
@@ -135,7 +98,7 @@ export default {
       validateName,
       onFocus,
       isDefaultName,
-      showRules // 添加到返回值
+      showRules
     };
   }
 };

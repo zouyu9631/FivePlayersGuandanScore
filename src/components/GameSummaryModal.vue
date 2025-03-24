@@ -122,6 +122,7 @@
 <script>
 import { computed, ref } from 'vue';
 import { useGameStats } from '../composables/useGameStats';
+import { formatScore, getScoreClass, sortPlayers } from '../utils/gameUtils';
 
 export default {
   props: {
@@ -143,14 +144,10 @@ export default {
     const gameHistoryRef = ref(props.gameHistory);
     
     // 按照得分排序的玩家列表
-    const sortedPlayers = computed(() => {
-      return [...props.players].sort((a, b) => b.score - a.score);
-    });
+    const sortedPlayers = computed(() => sortPlayers(props.players));
 
     // 使用游戏统计composable
     const {
-      formatScore,
-      getScoreClass,
       emperorTeamWinRate,
       emperorAvgScore,
       farmerAvgScore,

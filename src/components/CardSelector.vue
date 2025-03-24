@@ -27,6 +27,8 @@
 
 <script>
 import { ref, watch, onMounted } from 'vue';
+import { isRedCard, getCardDisplay, CARD_SUITS, CARD_VALUES } from '../utils/cardUtils';
+import { getItem, setItem } from '../utils/storageUtils';
 
 export default {
   props: {
@@ -47,13 +49,13 @@ export default {
     const selectedCard = ref(props.modelValue);
     const showHint = ref(true);
     
-    // 花色和点数
-    const cardSuits = ['♠', '♥', '♣', '♦'];
-    const cardValues = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+    // 使用导入的卡牌常量，而不是本地定义
+    const cardSuits = CARD_SUITS;
+    const cardValues = CARD_VALUES;
 
     // 检查本地存储是否已展示过提示
     onMounted(() => {
-      if (localStorage.getItem('cardSelectorHintShown')) {
+      if (getItem('cardSelectorHintShown', false)) {
         showHint.value = false;
       }
     });
@@ -62,13 +64,6 @@ export default {
     watch(() => props.modelValue, (newValue) => {
       selectedCard.value = newValue;
     });
-
-    // 判断是否为红色牌
-    const isRedCard = (card) => {
-      return card && (card.includes('♥') || card.includes('♦'));
-    };
-
-    const getCardDisplay = (suit, value) => `${suit}${value}`;
     
     // 打开/关闭选择器
     const openSelector = () => { visible.value = true; };
@@ -77,12 +72,12 @@ export default {
     // 隐藏提示
     const dismissHint = () => {
       showHint.value = false;
-      localStorage.setItem('cardSelectorHintShown', 'true');
+      setItem('cardSelectorHintShown', 'true');
     };
 
     // 处理牌选择
     const handleCardSelect = (suit, value) => {
-      let card = suit === 'joker' ? '🃏' : `${suit}${value}`;
+      let card = suit === 'joker' ? '🃏' : getCardDisplay(suit, value);
       
       selectedCard.value = card;
       emit('update:modelValue', card);
