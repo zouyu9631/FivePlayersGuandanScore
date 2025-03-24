@@ -16,6 +16,14 @@
   --bg-color: #f8f9fa;
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   --vh: 1vh; /* 动态视口高度单位，用于移动设备 */
+  
+  /* 添加分数颜色定义，使项目保持一致 */
+  --positive-score-color: #F44336;
+  --negative-score-color: #4CAF50;
+  --zero-score-color: #757575;
+  
+  /* 添加模态框遮罩颜色 */
+  --modal-overlay-bg: rgba(0, 0, 0, 0.7);
 }
 
 body {
@@ -187,6 +195,7 @@ h1, h2, h3 {
   padding: 0 !important;
   margin-bottom: 8px !important;
   border-radius: 6px !important;
+  box-sizing: border-box !important;
 }
 
 /* 保持ghost完全隐藏 */
@@ -297,16 +306,44 @@ body.dragging-active {
 }
 
 .positive {
-  color: #F44336;  /* 从绿色改为红色 */
+  color: var(--positive-score-color);
   font-weight: bold;
 }
 
 .negative {
-  color: #4CAF50;  /* 从红色改为绿色 */
+  color: var(--negative-score-color);
   font-weight: bold;
 }
 
 .zero-score {
-  color: #757575;  /* 灰色表示零分 */
+  color: var(--zero-score-color);
   font-weight: normal;
+}
+
+/* 模态框公共样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--modal-overlay-bg);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.modal-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.red-card {
+  color: var(--error-color);
 }

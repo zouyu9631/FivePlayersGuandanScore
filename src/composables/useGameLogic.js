@@ -32,6 +32,21 @@ export function useGameLogic(props, emit) {
     const emperorRank = playerRanking.value.findIndex(p => p.name === emperor.value);
     const guardRank = playerRanking.value.findIndex(p => p.name === guard.value);
 
+    // 辅助函数：为非皇帝/侍卫角色的玩家分配分数
+    const assignScoreToFarmers = (score) => {
+      playerRanking.value.forEach(player => {
+        if (player.name !== emperor.value && player.name !== guard.value) {
+          changes[player.name] += score;
+        }
+      });
+    };
+
+    // 设置皇帝侍卫组的分数
+    const setTeamScore = (score) => {
+      changes[emperor.value] += score;
+      changes[guard.value] += score;
+    };
+
     // 根据记分规则计算得分
     if (isSelfGuard.value) {
       // 皇帝自己情况
@@ -66,67 +81,37 @@ export function useGameLogic(props, emit) {
       if (bestRank === 0) { // 团队有人是头游
         if (worstRank === 1) {
           // 头游+二游
-          changes[emperor.value] += 90;
-          changes[guard.value] += 90;
+          setTeamScore(90);
           // 其他玩家每人扣60分
-          playerRanking.value.forEach(player => {
-            if (player.name !== emperor.value && player.name !== guard.value) {
-              changes[player.name] -= 60;
-            }
-          });
+          assignScoreToFarmers(-60);
         } else if (worstRank === 2 || worstRank === 3) {
           // 头游+三游或头游+四游
-          changes[emperor.value] += 60;
-          changes[guard.value] += 60;
+          setTeamScore(60);
           // 其他玩家每人扣40分
-          playerRanking.value.forEach(player => {
-            if (player.name !== emperor.value && player.name !== guard.value) {
-              changes[player.name] -= 40;
-            }
-          });
+          assignScoreToFarmers(-40);
         } else if (worstRank === 4) {
           // 头游+末游
-          changes[emperor.value] += 30;
-          changes[guard.value] += 30;
+          setTeamScore(30);
           // 其他玩家每人扣20分
-          playerRanking.value.forEach(player => {
-            if (player.name !== emperor.value && player.name !== guard.value) {
-              changes[player.name] -= 20;
-            }
-          });
+          assignScoreToFarmers(-20);
         }
       } else if (worstRank === 4) { // 团队有人是末游，但没人是头游
         if (bestRank === 1 || bestRank === 2) {
           // 二游+末游或三游+末游
-          changes[emperor.value] -= 60;
-          changes[guard.value] -= 60;
+          setTeamScore(-60);
           // 其他玩家每人得40分
-          playerRanking.value.forEach(player => {
-            if (player.name !== emperor.value && player.name !== guard.value) {
-              changes[player.name] += 40;
-            }
-          });
+          assignScoreToFarmers(40);
         } else if (bestRank === 3) {
           // 四游+末游
-          changes[emperor.value] -= 90;
-          changes[guard.value] -= 90;
+          setTeamScore(-90);
           // 其他玩家每人得60分
-          playerRanking.value.forEach(player => {
-            if (player.name !== emperor.value && player.name !== guard.value) {
-              changes[player.name] += 60;
-            }
-          });
+          assignScoreToFarmers(60);
         }
       } else {
         // 非头游+非末游的所有其他组合情况
-        changes[emperor.value] -= 30;
-        changes[guard.value] -= 30;
+        setTeamScore(-30);
         // 其他玩家每人得20分
-        playerRanking.value.forEach(player => {
-          if (player.name !== emperor.value && player.name !== guard.value) {
-            changes[player.name] += 20;
-          }
-        });
+        assignScoreToFarmers(20);
       }
     }
     

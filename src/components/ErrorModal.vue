@@ -1,6 +1,6 @@
 <template>
-  <div class="error-modal" @click="$emit('close')">
-    <div class="error-container" @click.stop>
+  <div class="modal-overlay" @click="$emit('close')">
+    <div class="modal-container error-container" @click.stop>
       <h3>信息不完整</h3>
       <p>{{ message }}</p>
       <div class="error-actions">
@@ -24,32 +24,14 @@ export default {
 </script>
 
 <style scoped>
-.error-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .error-container {
-  background-color: white;
-  border-radius: 8px;
-  padding: 20px;
-  width: 90%;
   max-width: 320px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .error-container h3 {
   margin-top: 0;
   text-align: center;
-  color: #f44336;
+  color: var(--error-color);
   margin-bottom: 15px;
 }
 
@@ -65,7 +47,7 @@ export default {
 }
 
 .error-btn {
-  background-color: #4a7bff;
+  background-color: var(--primary-color);
   padding: 10px 30px;
 }
 </style>

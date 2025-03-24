@@ -63,33 +63,33 @@
             </tr>
             <tr>
               <td>头游+末游</td>
-              <td>各+30</td>
-              <td>各-20</td>
+              <td>各<span class="positive-score">+30</span></td>
+              <td>各<span class="negative-score">-20</span></td>
             </tr>
             <tr>
               <td>头游+三/四游</td>
-              <td>各+60</td>
-              <td>各-40</td>
+              <td>各<span class="positive-score">+60</span></td>
+              <td>各<span class="negative-score">-40</span></td>
             </tr>
             <tr>
               <td>头游+二游</td>
-              <td>各+90</td>
-              <td>各-60</td>
+              <td>各<span class="positive-score">+90</span></td>
+              <td>各<span class="negative-score">-60</span></td>
             </tr>
             <tr>
               <td>非头游+非末游</td>
-              <td>各-30</td>
-              <td>各+20</td>
+              <td>各<span class="negative-score">-30</span></td>
+              <td>各<span class="positive-score">+20</span></td>
             </tr>
             <tr>
               <td>二/三游+末游</td>
-              <td>各-60</td>
-              <td>各+40</td>
+              <td>各<span class="negative-score">-60</span></td>
+              <td>各<span class="positive-score">+40</span></td>
             </tr>
             <tr>
               <td>四游+末游</td>
-              <td>各-90</td>
-              <td>各+60</td>
+              <td>各<span class="negative-score">-90</span></td>
+              <td>各<span class="positive-score">+60</span></td>
             </tr>
           </table>
           
@@ -102,13 +102,13 @@
             </tr>
             <tr>
               <td>头游</td>
-              <td>+720</td>
-              <td>各-180</td>
+              <td><span class="positive-score">+720</span></td>
+              <td>各<span class="negative-score">-180</span></td>
             </tr>
             <tr>
               <td>非头游</td>
-              <td>-360</td>
-              <td>各+90</td>
+              <td><span class="negative-score">-360</span></td>
+              <td>各<span class="positive-score">+90</span></td>
             </tr>
           </table>
         </section>
@@ -269,6 +269,16 @@ export default {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
+}
+
+.positive-score {
+  color: #e74c3c; /* 改为红色 */
+  font-weight: bold;
+}
+
+.negative-score {
+  color: #2ecc71; /* 改为绿色 */
+  font-weight: bold;
 }
 
 .score-table th {
