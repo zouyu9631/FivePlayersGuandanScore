@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import './assets/theme.css' // 先导入主题变量
 import './assets/main.css'
 import { applyBrowserCompatibility, setupTouchEvents } from './utils/browserUtils'
 

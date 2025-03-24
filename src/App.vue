@@ -17,6 +17,7 @@ import { ref } from 'vue';
 import PlayerSetup from './components/PlayerSetup.vue';
 import GameBoard from './components/GameBoard.vue';
 import { loadGameState, saveGameState, clearGameState } from './utils/storageUtils';
+import { safeExecute } from './utils/errorUtils';
 
 export default {
   components: {
@@ -61,25 +62,28 @@ export default {
       gameHistory.value.push(roundData);
       currentRound.value++;
       
-      // 验证计算结果
-      let expectedScores = {};
-      players.value.forEach(p => {
-        expectedScores[p.name] = 0;
-      });
-      
-      // 从历史记录重新计算总分
-      gameHistory.value.forEach((round) => {
-        Object.keys(round.scoreChanges).forEach(playerName => {
-          expectedScores[playerName] = (expectedScores[playerName] || 0) + Number(round.scoreChanges[playerName]);
+      // 使用安全执行函数包装可能出错的操作
+      safeExecute(() => {
+        // 验证计算结果并修正不一致
+        let expectedScores = {};
+        players.value.forEach(p => {
+          expectedScores[p.name] = 0;
         });
-      });
-      
-      // 自动修正不一致的分数
-      players.value.forEach(p => {
-        if (p.score !== expectedScores[p.name]) {
-          p.score = expectedScores[p.name];
-        }
-      });
+        
+        // 从历史记录重新计算总分
+        gameHistory.value.forEach((round) => {
+          Object.keys(round.scoreChanges).forEach(playerName => {
+            expectedScores[playerName] = (expectedScores[playerName] || 0) + Number(round.scoreChanges[playerName]);
+          });
+        });
+        
+        // 自动修正不一致的分数
+        players.value.forEach(p => {
+          if (p.score !== expectedScores[p.name]) {
+            p.score = expectedScores[p.name];
+          }
+        });
+      }, [], null, '验证分数计算');
       
       saveGameState({
         players: players.value,

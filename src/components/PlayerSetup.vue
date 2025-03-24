@@ -42,6 +42,7 @@
 import { ref } from 'vue';
 import RulesModal from './RulesModal.vue';
 import { validatePlayerName } from '../utils/validationUtils';
+import { DEFAULT_PLAYER_NAMES } from '../config/gameConfig';
 
 export default {
   components: {
@@ -49,7 +50,7 @@ export default {
   },
   emits: ['start-game'],
   setup(props, { emit }) {
-    const defaultNames = ["关羽", "张飞", "赵云", "马超", "黄忠"];
+    const defaultNames = DEFAULT_PLAYER_NAMES;
     const showRules = ref(false);
     
     const players = ref([
@@ -183,13 +184,13 @@ export default {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: rgba(74, 123, 255, 0.05);
-  color: rgba(74, 123, 255, 0.7);
+  background-color: rgba(var(--primary-color), 0.05);
+  color: var(--primary-color);
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  border: 1.5px solid rgba(74, 123, 255, 0.5);
+  border: 1.5px solid rgba(var(--primary-color), 0.5);
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   transition: all 0.2s ease;
   padding: 0;
@@ -204,8 +205,8 @@ export default {
 }
 
 .rules-button:hover {
-  background-color: rgba(74, 123, 255, 0.2);
-  color: rgba(74, 123, 255, 0.9);
+  background-color: rgba(var(--primary-color), 0.2);
+  color: var(--primary-color);
   transform: scale(1.05);
 }
 

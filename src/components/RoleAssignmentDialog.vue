@@ -10,14 +10,14 @@
           @click="$emit('assign', 'emperor', player)" 
           :class="{ 'active': isEmperor }"
           class="role-btn emperor-btn">
-          <span class="role-icon">👑</span>
+          <span class="role-icon">{{ ROLE_ICONS.EMPEROR }}</span>
         </button>
         
         <button 
           @click="$emit('assign', 'guard', player)" 
           :class="{ 'active': isGuard }"
           class="role-btn guard-btn">
-          <span class="role-icon">🛡️</span>
+          <span class="role-icon">{{ ROLE_ICONS.GUARD }}</span>
         </button>
         
         <button 
@@ -33,6 +33,7 @@
 <script>
 import { computed, ref, onMounted } from 'vue';
 import { calculateDialogPosition } from '../utils/uiUtils';
+import { ROLE_ICONS } from '../config/gameConfig';
 
 export default {
   props: {
@@ -73,7 +74,8 @@ export default {
       isGuard,
       hasRole,
       dialogStyle,
-      handleRemoveOrClose
+      handleRemoveOrClose,
+      ROLE_ICONS
     };
   }
 };
@@ -87,6 +89,7 @@ export default {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
+  background-color: var(--modal-overlay);
   z-index: 1000;
   display: flex;
   justify-content: center;
@@ -139,24 +142,24 @@ export default {
 
 /* 皇帝按钮 - 使用与排序界面相同的底色 */
 .emperor-btn {
-  background-color: #fff8e1;
-  border-color: #ffe082;
+  background-color: var(--emperor-color);
+  border-color: var(--emperor-color);
 }
 
 .emperor-btn.active {
-  background-color: #ffecb3;
-  border-color: #ffd54f;
+  background-color: var(--emperor-active);
+  border-color: var(--emperor-active);
 }
 
 /* 侍卫按钮 - 使用与排序界面相同的底色 */
 .guard-btn {
-  background-color: #e8f5e9;
-  border-color: #a5d6a7;
+  background-color: var(--guard-color);
+  border-color: var(--guard-color);
 }
 
 .guard-btn.active {
-  background-color: #c8e6c9;
-  border-color: #81c784;
+  background-color: var(--guard-active);
+  border-color: var(--guard-active);
 }
 
 /* 移除按钮 */

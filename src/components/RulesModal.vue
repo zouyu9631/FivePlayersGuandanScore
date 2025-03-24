@@ -10,8 +10,8 @@
         <section class="rule-section">
           <h3>基本设置</h3>
           <ul>
-            <li><strong>牌数：</strong>使用3副牌，去掉2张大王，保留1张大王</li>
-            <li><strong>百搭牌：</strong>百搭牌始终是红桃2</li>
+            <li><strong>牌数：</strong>使用3副牌，去掉 2 张大王，保留 1 张大王</li>
+            <li><strong>百搭牌：</strong>百搭牌始终是红桃 2</li>
             <li><strong>出牌顺序：</strong>每局游戏由皇帝先出牌</li>
           </ul>
         </section>
@@ -46,7 +46,7 @@
         <section class="rule-section">
           <h3>特殊牌力</h3>
           <ul>
-            <li>大王价值相当于6.5炸（能压6个A，但不能压7个2）</li>
+            <li>大王价值相当于 6.5 炸（能压 6 个 A，但不能压 7 个 2）</li>
             <li>三个小王一起出，效力等同于一个大王</li>
             <li>未被展示的叫牌，在游戏过程中单独打出，这张牌可以压过任何除了大小王的单张牌</li>
           </ul>
@@ -56,60 +56,68 @@
           <h3>计分规则</h3>
           <h4>皇帝和侍卫是两人时:</h4>
           <table class="score-table">
-            <tr>
-              <th>排名组合</th>
-              <th>皇帝/侍卫得分</th>
-              <th>农民得分</th>
-            </tr>
-            <tr>
-              <td>头游+末游</td>
-              <td>各<span class="positive-score">+30</span></td>
-              <td>各<span class="negative-score">-20</span></td>
-            </tr>
-            <tr>
-              <td>头游+三/四游</td>
-              <td>各<span class="positive-score">+60</span></td>
-              <td>各<span class="negative-score">-40</span></td>
-            </tr>
-            <tr>
-              <td>头游+二游</td>
-              <td>各<span class="positive-score">+90</span></td>
-              <td>各<span class="negative-score">-60</span></td>
-            </tr>
-            <tr>
-              <td>非头游+非末游</td>
-              <td>各<span class="negative-score">-30</span></td>
-              <td>各<span class="positive-score">+20</span></td>
-            </tr>
-            <tr>
-              <td>二/三游+末游</td>
-              <td>各<span class="negative-score">-60</span></td>
-              <td>各<span class="positive-score">+40</span></td>
-            </tr>
-            <tr>
-              <td>四游+末游</td>
-              <td>各<span class="negative-score">-90</span></td>
-              <td>各<span class="positive-score">+60</span></td>
-            </tr>
+            <thead>
+              <tr>
+                <th>排名组合</th>
+                <th>皇帝/侍卫得分</th>
+                <th>农民得分</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>头游+末游</td>
+                <td>各<span class="positive-score">+30</span></td>
+                <td>各<span class="negative-score">-20</span></td>
+              </tr>
+              <tr>
+                <td>头游+三/四游</td>
+                <td>各<span class="positive-score">+60</span></td>
+                <td>各<span class="negative-score">-40</span></td>
+              </tr>
+              <tr>
+                <td>头游+二游</td>
+                <td>各<span class="positive-score">+90</span></td>
+                <td>各<span class="negative-score">-60</span></td>
+              </tr>
+              <tr>
+                <td>非头游+非末游</td>
+                <td>各<span class="negative-score">-30</span></td>
+                <td>各<span class="positive-score">+20</span></td>
+              </tr>
+              <tr>
+                <td>二/三游+末游</td>
+                <td>各<span class="negative-score">-60</span></td>
+                <td>各<span class="positive-score">+40</span></td>
+              </tr>
+              <tr>
+                <td>四游+末游</td>
+                <td>各<span class="negative-score">-90</span></td>
+                <td>各<span class="positive-score">+60</span></td>
+              </tr>
+            </tbody>
           </table>
           
           <h4>皇帝自己一伙时:</h4>
           <table class="score-table">
-            <tr>
-              <th>排名</th>
-              <th>皇帝得分</th>
-              <th>农民得分</th>
-            </tr>
-            <tr>
-              <td>头游</td>
-              <td><span class="positive-score">+720</span></td>
-              <td>各<span class="negative-score">-180</span></td>
-            </tr>
-            <tr>
-              <td>非头游</td>
-              <td><span class="negative-score">-360</span></td>
-              <td>各<span class="positive-score">+90</span></td>
-            </tr>
+            <thead>
+              <tr>
+                <th>排名</th>
+                <th>皇帝得分</th>
+                <th>农民得分</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>头游</td>
+                <td><span class="positive-score">+720</span></td>
+                <td>各<span class="negative-score">-180</span></td>
+              </tr>
+              <tr>
+                <td>非头游</td>
+                <td><span class="negative-score">-360</span></td>
+                <td>各<span class="positive-score">+90</span></td>
+              </tr>
+            </tbody>
           </table>
         </section>
       </div>
@@ -135,7 +143,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--modal-overlay);
   z-index: 2000;
   display: flex;
   justify-content: center;
@@ -161,7 +169,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
   position: sticky;
   top: 0;
   background: white;
@@ -170,7 +178,7 @@ export default {
 
 .rules-header h2 {
   margin: 0;
-  color: #333;
+  color: var(--text-color);
 }
 
 .close-button {
@@ -193,14 +201,14 @@ export default {
 }
 
 .rule-section h3 {
-  color: #4a7bff;
+  color: var(--primary-color);
   margin-bottom: 12px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 8px;
 }
 
 .rule-section h4 {
-  color: #333;
+  color: var(--text-color);
   margin: 16px 0 10px 0;
 }
 
@@ -251,8 +259,8 @@ export default {
 }
 
 .special-note {
-  background-color: #fff8e1;
-  border-left: 4px solid #ffc107;
+  background-color: var(--emperor-color);
+  border-left: 4px solid var(--warning-color);
   padding: 10px 15px;
   margin: 15px 0;
   border-radius: 4px;
@@ -266,18 +274,18 @@ export default {
 }
 
 .score-table th, .score-table td {
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   padding: 8px;
   text-align: center;
 }
 
 .positive-score {
-  color: #e74c3c; /* 改为红色 */
+  color: var(--positive-score-color);
   font-weight: bold;
 }
 
 .negative-score {
-  color: #2ecc71; /* 改为绿色 */
+  color: var(--negative-score-color);
   font-weight: bold;
 }
 
@@ -291,7 +299,7 @@ export default {
 
 .rules-footer {
   padding: 15px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-color);
   text-align: center;
   background: white;
   position: sticky;
@@ -299,7 +307,7 @@ export default {
 }
 
 .close-btn {
-  background-color: #4a7bff;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   padding: 10px 25px;

@@ -17,9 +17,9 @@
             <tr class="role-row">
               <td class="round-cell">{{ i + 1 }}</td>
               <td v-for="player in sortedPlayerNames" :key="`${i}-${player}-role`" class="role-cell">
-                <span v-if="player === round.emperor && player !== round.guard" class="role-icon emperor-icon" title="皇帝">👑</span>
-                <span v-else-if="player === round.guard && player !== round.emperor" class="role-icon guard-icon" title="侍卫">🛡️</span>
-                <span v-else-if="player === round.emperor && player === round.guard" class="role-icon self-guard-icon" title="皇帝自保">👑🛡️</span>
+                <span v-if="player === round.emperor && player !== round.guard" class="role-icon emperor-icon" title="皇帝">{{ ROLE_ICONS.EMPEROR }}</span>
+                <span v-else-if="player === round.guard && player !== round.emperor" class="role-icon guard-icon" title="侍卫">{{ ROLE_ICONS.GUARD }}</span>
+                <span v-else-if="player === round.emperor && player === round.guard" class="role-icon self-guard-icon" title="皇帝自保">{{ ROLE_ICONS.SELF_GUARD }}</span>
                 <span v-else class="role-placeholder">&nbsp;</span>
               </td>
             </tr>
@@ -49,6 +49,7 @@
 <script>
 import { isRedCard } from '../utils/cardUtils';
 import { formatScore, getScoreClass } from '../utils/gameUtils';
+import { ROLE_ICONS } from '../config/gameConfig';
 
 export default {
   name: 'GameHistory',
@@ -90,6 +91,11 @@ export default {
     isRedCard,
     formatScore,
     getScoreClass
+  },
+  data() {
+    return {
+      ROLE_ICONS
+    };
   },
   mounted() {
     // 确保显示最新的记录
@@ -151,7 +157,7 @@ export default {
   position: sticky;
   top: 0;
   z-index: 1;
-  border-bottom: 2px solid #ddd;
+  border-bottom: 2px solid var(--border-color);
   font-size: 0.92em; /* 减小字体大小 */
 }
 
@@ -164,7 +170,7 @@ export default {
 .round-cell {
   font-weight: bold;
   text-align: center;
-  border-right: 1px solid #eee;
+  border-right: 1px solid var(--border-color);
   vertical-align: middle;
   padding: 8px 4px 6px 4px;
   background-color: #f8f8f8;
@@ -173,7 +179,7 @@ export default {
 
 .card-cell {
   text-align: center;
-  border-right: 1px solid #eee;
+  border-right: 1px solid var(--border-color);
   padding: 6px 4px 8px 4px;
   font-size: 0.9em;
   color: #666;
@@ -202,14 +208,14 @@ export default {
 
 /* 分数行样式 */
 .score-row td {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--border-color);
   text-align: center;
   padding: 0px 4px 8px 4px;
   font-weight: 500;
 }
 
 .score-row:last-child td {
-  border-bottom: 2px solid #eee;
+  border-bottom: 2px solid var(--border-color);
 }
 
 .score-cell {
@@ -226,24 +232,24 @@ export default {
 }
 
 .self-guard-icon {
-  color: #ff9800;
+  color: var(--self-guard-color);
 }
 
 .emperor-icon {
-  color: #ffc107;
+  color: var(--emperor-color);
 }
 
 .guard-icon {
-  color: #2196F3;
+  color: var(--guard-color);
 }
 
 .positive {
-  color: #F44336;  /* 从绿色改为红色 */
+  color: var(--positive-score-color);
   font-weight: bold;
 }
 
 .negative {
-  color: #4CAF50;  /* 从红色改为绿色 */
+  color: var(--negative-score-color);
   font-weight: bold;
 }
 
@@ -286,6 +292,6 @@ export default {
 }
 
 .red-card {
-  color: #d32f2f;
+  color: var(--red-card-color);
 }
 </style>

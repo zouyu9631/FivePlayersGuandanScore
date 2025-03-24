@@ -4,27 +4,7 @@
   padding: 0;
 }
 
-/* 使用CSS变量定义主题色，方便维护 */
-:root {
-  --primary-color: #4a7bff;
-  --primary-dark: #3a67e0;
-  --success-color: #4CAF50;
-  --error-color: #F44336;
-  --warning-color: #ff9800;
-  --text-color: #333;
-  --border-color: #ddd;
-  --bg-color: #f8f9fa;
-  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --vh: 1vh; /* 动态视口高度单位，用于移动设备 */
-  
-  /* 添加分数颜色定义，使项目保持一致 */
-  --positive-score-color: #F44336;
-  --negative-score-color: #4CAF50;
-  --zero-score-color: #757575;
-  
-  /* 添加模态框遮罩颜色 */
-  --modal-overlay-bg: rgba(0, 0, 0, 0.7);
-}
+/* 使用theme.css中的CSS变量，这里不再重复定义 */
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -178,13 +158,6 @@ h1, h2, h3 {
   border-radius: 6px;
 }
 
-/* 优化拖拽相关样式 */
-[draggable] {
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-/* 修改空的placeholder样式，不再完全隐藏 */
 .ghost-placeholder {
   border: 2px dashed #1976d2 !important;
   background-color: rgba(25, 118, 210, 0.1) !important;
@@ -197,6 +170,12 @@ h1, h2, h3 {
   border-radius: 6px !important;
   box-sizing: border-box !important;
 }
+
+/* 优化拖拽相关样式 */
+/* [draggable] {
+  user-select: none;
+  -webkit-user-select: none;
+} */
 
 /* 保持ghost完全隐藏 */
 .ghost, .sortable-ghost {
@@ -327,7 +306,7 @@ body.dragging-active {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--modal-overlay-bg);
+  background-color: var(--modal-overlay);
   z-index: 1000;
   display: flex;
   justify-content: center;
@@ -345,5 +324,5 @@ body.dragging-active {
 }
 
 .red-card {
-  color: var(--error-color);
+  color: var(--red-card-color);
 }

@@ -1,0 +1,39 @@
+:root {
+  /* 主要颜色 */
+  --primary-color: #4a7bff;
+  --primary-dark: #3a67e0;
+  
+  /* 状态颜色 */
+  --success-color: #4CAF50;
+  --error-color: #F44336;
+  --warning-color: #ff9800;
+  
+  /* 添加缺少的深色变体 */
+  --success-color-dark: #388E3C;
+  --error-color-dark: #d32f2f;
+  --warning-color-dark: #f57c00;
+  
+  /* 文本和背景 */
+  --text-color: #333;
+  --bg-color: #f8f9fa;
+  
+  /* 分数颜色 - 让项目保持一致 */
+  --positive-score-color: #F44336; /* 得分为红色 */
+  --negative-score-color: #4CAF50; /* 负分为绿色 */
+  --zero-score-color: #757575;     /* 零分为灰色 */
+  
+  /* 角色颜色 */
+  --emperor-color: #fff8e1;
+  --emperor-active: #ffecb3;
+  --guard-color: #e8f5e9;
+  --guard-active: #c8e6c9;
+  --self-guard-color: #ff9800;
+  
+  /* 卡牌颜色 */
+  --red-card-color: #d32f2f;
+  
+  /* 其他UI颜色 */
+  --border-color: #ddd;
+  --card-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  --modal-overlay: rgba(0, 0, 0, 0.7);
+}

@@ -1,6 +1,7 @@
 /**
  * 游戏相关工具函数
  */
+import { RANK_NAMES } from '../config/gameConfig';
 
 /**
  * 获取排名显示名称
@@ -8,8 +9,7 @@
  * @returns {string} 排名名称（头游、二游等）
  */
 export function getRankName(index) {
-  const ranks = ['头游', '二游', '三游', '四游', '末游'];
-  return ranks[index];
+  return RANK_NAMES[index];
 }
 
 /**

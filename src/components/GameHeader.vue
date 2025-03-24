@@ -56,7 +56,7 @@ export default {
 }
 
 .end-game-summary-btn {
-  background-color: #f44336;
+  background-color: var(--error-color);
   font-size: 14px;
   padding: 6px 12px;
   height: auto;
@@ -83,17 +83,17 @@ export default {
 }
 
 .positive {
-  color: #F44336;  /* 从绿色改为红色 */
+  color: var(--positive-score-color);
   font-weight: bold;
 }
 
 .negative {
-  color: #4CAF50;  /* 从红色改为绿色 */
+  color: var(--negative-score-color);
   font-weight: bold;
 }
 
 .zero-score {
-  color: #757575;  /* 灰色表示零分 */
+  color: var(--zero-score-color);
   font-weight: normal;
 }
 

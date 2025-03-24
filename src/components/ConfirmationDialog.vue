@@ -13,9 +13,9 @@
         <div class="confirmation-ranks">
           <div v-for="(player, index) in playerRanking" :key="player.name" class="confirm-player-rank">
             <span>{{ getRankName(index) }}： {{ player.name }} 
-              <span v-if="player.name === emperor && player.name !== guard" class="emperor-indicator">👑</span>
-              <span v-if="player.name === guard && player.name !== emperor" class="guard-indicator">🛡️</span>
-              <span v-if="player.name === emperor && player.name === guard" class="self-guard-indicator">👑🛡️</span>
+              <span v-if="player.name === emperor && player.name !== guard" class="emperor-indicator">{{ ROLE_ICONS.EMPEROR }}</span>
+              <span v-if="player.name === guard && player.name !== emperor" class="guard-indicator">{{ ROLE_ICONS.GUARD }}</span>
+              <span v-if="player.name === emperor && player.name === guard" class="self-guard-indicator">{{ ROLE_ICONS.SELF_GUARD }}</span>
             </span>
             <span :class="{ 
               'positive': scoreChanges[player.name] > 0, 
@@ -37,6 +37,7 @@
 <script>
 import { isRedCard } from '../utils/cardUtils';
 import { getRankName } from '../utils/gameUtils';
+import { ROLE_ICONS } from '../config/gameConfig';
 
 export default {
   props: {
@@ -48,7 +49,7 @@ export default {
   },
   emits: ['confirm', 'cancel'],
   setup(props) {
-    return { getRankName, isRedCard };
+    return { getRankName, isRedCard, ROLE_ICONS };
   }
 };
 </script>
@@ -60,7 +61,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.7);
+  background: var(--modal-overlay);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -105,16 +106,16 @@ export default {
 }
 
 .confirm-btn {
-  background-color: #4CAF50;
+  background-color: var(--success-color);
 }
 
 .positive {
-  color: #F44336;  /* 从绿色改为红色 */
+  color: var(--positive-score-color);
   font-weight: bold;
 }
 
 .negative {
-  color: #4CAF50;  /* 从红色改为绿色 */
+  color: var(--negative-score-color);
   font-weight: bold;
 }
 
@@ -127,10 +128,10 @@ export default {
 }
 
 .self-guard-indicator {
-  color: #ff9800;
+  color: var(--self-guard-color);
 }
 
 .red-card {
-  color: #d32f2f;
+  color: var(--red-card-color);
 }
 </style>

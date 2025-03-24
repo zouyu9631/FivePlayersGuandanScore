@@ -1,3 +1,5 @@
+import { safeExecute, logError } from './errorUtils';
+
 /**
  * 浏览器兼容性和触摸事件优化工具
  */
@@ -10,7 +12,9 @@ export function applyBrowserCompatibility() {
     
     // 修复iOS设备上的视口高度问题
     const fixViewportHeight = () => {
-      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      safeExecute(() => {
+        document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      }, [], null, 'iOS视口高度修复');
     };
     
     window.addEventListener('resize', fixViewportHeight);
@@ -19,9 +23,11 @@ export function applyBrowserCompatibility() {
   }
   
   // 处理高对比度模式
-  if (window.matchMedia && window.matchMedia('(forced-colors: active)').matches) {
-    document.body.classList.add('high-contrast-mode');
-  }
+  safeExecute(() => {
+    if (window.matchMedia && window.matchMedia('(forced-colors: active)').matches) {
+      document.body.classList.add('high-contrast-mode');
+    }
+  }, [], null, '高对比度模式检测');
 }
 
 // 设置触摸事件优化
@@ -67,17 +73,19 @@ export function setupTouchEvents() {
 
 // 辅助函数：清理拖拽产生的ghost元素
 function cleanupGhostElements() {
-  setTimeout(() => {
-    const ghosts = document.querySelectorAll('.ghost, .ghost-empty, .sortable-ghost');
-    ghosts.forEach(ghost => {
-      if (ghost.parentNode) {
-        ghost.style.display = 'none';
-        try {
-          ghost.parentNode.removeChild(ghost);
-        } catch (err) {
-          console.error('清理ghost元素出错', err);
+  safeExecute(() => {
+    setTimeout(() => {
+      const ghosts = document.querySelectorAll('.ghost, .ghost-empty, .sortable-ghost');
+      ghosts.forEach(ghost => {
+        if (ghost.parentNode) {
+          ghost.style.display = 'none';
+          try {
+            ghost.parentNode.removeChild(ghost);
+          } catch (err) {
+            logError(err, '清理ghost元素出错');
+          }
         }
-      }
-    });
-  }, 0);
+      });
+    }, 0);
+  }, [], null, '清理拖拽元素');
 }

@@ -296,18 +296,12 @@ export default {
   gap: 15px;
 }
 
-.return-btn, .end-game-btn {
-  flex: 1;
-  padding: 12px;
-  font-weight: bold;
-}
-
 .return-btn {
-  background-color: #4a7bff;
+  background-color: var(--primary-color);
 }
 
 .end-game-btn {
-  background-color: #FF5722;
+  background-color: var(--error-color);
 }
 
 /* 响应式调整 */

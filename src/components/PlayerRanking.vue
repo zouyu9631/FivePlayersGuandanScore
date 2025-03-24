@@ -100,7 +100,7 @@ export default {
   border-radius: 8px;
   padding: 15px;
   margin: 15px 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: var(--card-shadow);
 }
 
 .player-rank {
@@ -108,7 +108,7 @@ export default {
   align-items: center;
   padding: 8px 0;
   background: #f9f9f9;
-  border: 1px solid #eee;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   margin-bottom: 8px;
   transition: background 0.2s, transform 0.1s;
@@ -186,23 +186,23 @@ export default {
 }
 
 .self-guard-indicator {
-  color: #ff9800;
+  color: var(--self-guard-color);
   font-weight: bold;
 }
 
 .emperor-player {
-  background: #fff8e1;
-  border-color: #ffe082;
+  background: var(--emperor-color);
+  border-color: var(--emperor-active);
 }
 
 .guard-player {
-  background: #e8f5e9;
-  border-color: #a5d6a7;
+  background: var(--guard-color);
+  border-color: var(--guard-active);
 }
 
 .emperor-guard-player {
-  background: linear-gradient(135deg, #fff8e1 0%, #e8f5e9 100%);
-  border-color: #ffca28;
+  background: linear-gradient(135deg, var(--emperor-color) 0%, var(--guard-color) 100%);
+  border-color: var(--emperor-active);
 }
 
 .ghost {
@@ -213,7 +213,7 @@ export default {
 }
 
 .ghost-placeholder {
-  border: 2px dashed #1976d2 !important;
+  border: 2px dashed var(--primary-color) !important;
   background-color: rgba(25, 118, 210, 0.1) !important;
   opacity: 0.5 !important;
   height: 40px !important;
@@ -236,7 +236,7 @@ export default {
   pointer-events: none;
   transition: none !important;
   border-radius: 6px !important;
-  border: 1px solid #ddd !important;
+  border: 1px solid var(--border-color) !important;
   height: 40px !important;
   padding: 0 !important;
   box-sizing: border-box !important;

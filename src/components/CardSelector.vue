@@ -29,12 +29,13 @@
 import { ref, watch, onMounted } from 'vue';
 import { isRedCard, getCardDisplay, CARD_SUITS, CARD_VALUES } from '../utils/cardUtils';
 import { getItem, setItem } from '../utils/storageUtils';
+import { DEFAULT_CALLED_CARD, STORAGE_KEYS } from '../config/gameConfig';
 
 export default {
   props: {
     modelValue: {
       type: String,
-      default: '🃏'
+      default: DEFAULT_CALLED_CARD
     },
     currentRound: {
       type: Number,
@@ -55,7 +56,7 @@ export default {
 
     // 检查本地存储是否已展示过提示
     onMounted(() => {
-      if (getItem('cardSelectorHintShown', false)) {
+      if (getItem(STORAGE_KEYS.CARD_SELECTOR_HINT, false)) {
         showHint.value = false;
       }
     });
@@ -72,7 +73,7 @@ export default {
     // 隐藏提示
     const dismissHint = () => {
       showHint.value = false;
-      setItem('cardSelectorHintShown', 'true');
+      setItem(STORAGE_KEYS.CARD_SELECTOR_HINT, 'true');
     };
 
     // 处理牌选择
@@ -110,7 +111,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.7);
+  background: var(--modal-overlay);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -181,7 +182,7 @@ export default {
 }
 
 .red-card {
-  color: #d32f2f;
+  color: var(--red-card-color);
 }
 
 .card-display {

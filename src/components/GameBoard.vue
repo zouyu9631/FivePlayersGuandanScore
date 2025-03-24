@@ -239,12 +239,12 @@ export default {
 }
 
 .calculate-btn {
-  background-color: #4CAF50;
+  background-color: var(--success-color);
   padding: 12px 25px;
   font-size: 16px;
 }
 
 .calculate-btn:hover {
-  background-color: #388E3C;
+  background-color: var(--success-color-dark); /* 替换硬编码的 #388E3C */
 }
 </style>
