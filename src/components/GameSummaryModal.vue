@@ -1,118 +1,110 @@
 <template>
-  <div class="game-summary-modal" @click="$emit('continue')">
-    <div class="game-summary-container" @click.stop>
-      <h2>游戏结算</h2>
-      
+  <div class="modal-overlay" @click="$emit('continue')">
+    <div class="modal-container" @click.stop>
       <div class="summary-content">
-        <!-- 玩家数据展示 - 点击切换玩家 -->
-        <div class="player-summary card">
-          <div class="player-scores">
-            <div 
-              v-for="player in players" 
-              :key="player.name" 
-              class="player-score"
-              :class="{'selected': selectedPlayer === player.name}"
-              @click="selectedPlayer = player.name"
-            >
-              <span class="player-name">{{ player.name }}</span>
-              <span :class="{ 
-                'positive': player.score > 0, 
-                'negative': player.score < 0,
-                'zero-score': player.score === 0 
-              }">
-                {{ player.score > 0 ? '+' : '' }}{{ player.score }}
-              </span>
-            </div>
-          </div>
-          
-          <!-- 始终展示选中玩家的详细数据 -->
-          <div class="player-details">
-            <div class="role-header">
-              <div class="role-title">身份</div>
-              <div class="role-data">
-                <span>次数</span>
-                <span>胜率</span>
-                <span>平均得分</span>
+        <!-- 整体数据统计 -->
+        <div class="overall-stats card">
+          <h3>本次游戏共 {{ gameHistoryRef.length }} 局</h3>
+          <div class="stats-grid">
+            <!-- 皇帝方统计 -->
+            <div class="stat-item">
+              <span>皇帝方:</span>
+              <div class="stat-values">
+                <span>胜率 {{ emperorTeamWinRate }}%</span>
+                <span :class="getScoreClass(emperorAvgScore)">
+                  平均得分{{ emperorAvgScore > 0 ? '+' : '' }}{{ emperorAvgScore }}
+                </span>
               </div>
             </div>
-            <div class="role-stats">
-              <div class="role-row">
-                <div class="role-title">皇帝</div>
-                <div class="role-data">
-                  <span>{{ getPlayerRoleCount(selectedPlayer, 'emperor') }}次</span>
-                  <span>{{ getPlayerRoleWinRate(selectedPlayer, 'emperor') }}%</span>
-                  <span :class="{
-                    'positive': getPlayerRoleAvgScore(selectedPlayer, 'emperor') > 0,
-                    'negative': getPlayerRoleAvgScore(selectedPlayer, 'emperor') < 0,
-                    'zero-score': getPlayerRoleAvgScore(selectedPlayer, 'emperor') === 0
-                  }">
-                    {{ getPlayerRoleAvgScore(selectedPlayer, 'emperor') > 0 ? '+' : '' }}{{ getPlayerRoleAvgScore(selectedPlayer, 'emperor') }}
-                  </span>
-                </div>
-              </div>
-              <div class="role-row">
-                <div class="role-title">侍卫</div>
-                <div class="role-data">
-                  <span>{{ getPlayerRoleCount(selectedPlayer, 'guard') }}次</span>
-                  <span>{{ getPlayerRoleWinRate(selectedPlayer, 'guard') }}%</span>
-                  <span :class="{
-                    'positive': getPlayerRoleAvgScore(selectedPlayer, 'guard') > 0,
-                    'negative': getPlayerRoleAvgScore(selectedPlayer, 'guard') < 0,
-                    'zero-score': getPlayerRoleAvgScore(selectedPlayer, 'guard') === 0
-                  }">
-                    {{ getPlayerRoleAvgScore(selectedPlayer, 'guard') > 0 ? '+' : '' }}{{ getPlayerRoleAvgScore(selectedPlayer, 'guard') }}
-                  </span>
-                </div>
-              </div>
-              <div class="role-row">
-                <div class="role-title">农民</div>
-                <div class="role-data">
-                  <span>{{ getPlayerRoleCount(selectedPlayer, 'farmer') }}次</span>
-                  <span>{{ getPlayerRoleWinRate(selectedPlayer, 'farmer') }}%</span>
-                  <span :class="{
-                    'positive': getPlayerRoleAvgScore(selectedPlayer, 'farmer') > 0,
-                    'negative': getPlayerRoleAvgScore(selectedPlayer, 'farmer') < 0,
-                    'zero-score': getPlayerRoleAvgScore(selectedPlayer, 'farmer') === 0
-                  }">
-                    {{ getPlayerRoleAvgScore(selectedPlayer, 'farmer') > 0 ? '+' : '' }}{{ getPlayerRoleAvgScore(selectedPlayer, 'farmer') }}
-                  </span>
-                </div>
+            
+            <!-- 农民方统计 -->
+            <div class="stat-item">
+              <span>农民方:</span>
+              <div class="stat-values">
+                <span>胜率 {{ 100-emperorTeamWinRate }}%</span>
+                <span :class="getScoreClass(farmerAvgScore)">
+                  平均得分{{ farmerAvgScore > 0 ? '+' : '' }}{{ farmerAvgScore }}
+                </span>
               </div>
             </div>
           </div>
         </div>
         
-        <!-- 整体数据统计 -->
-        <div class="overall-stats card">
-          <h3>整体数据</h3>
-          <div class="stats-grid">
-            <div class="stat-item">
-              <span>本次游戏共{{ gameHistory.length }}局</span>
-            </div>
-            <div class="stat-item">
-              <span>皇帝方:</span>
-              <div class="stat-values">
-                <span>胜率 {{ emperorTeamWinRate }}%</span>
-                <span :class="{
-                  'positive': emperorAvgScore > 0,
-                  'negative': emperorAvgScore < 0,
-                  'zero-score': emperorAvgScore === 0
-                }">
-                  平均得分{{ emperorAvgScore > 0 ? '+' : '' }}{{ emperorAvgScore }}
-                </span>
+        <!-- 玩家排行榜 -->
+        <div class="players-ranking card">
+          <div class="players-table">
+            <!-- 表格标题行 -->
+            <div class="table-header">
+              <div class="player-col">玩家</div>
+              <div class="score-col">总分</div>
+              <div class="role-col">
+                <div class="role-label">皇帝</div>
+                <div class="role-stats">
+                  <span>次数</span>
+                  <span>得分</span>
+                  <span>胜率</span>
+                </div>
+              </div>
+              <div class="role-col">
+                <div class="role-label">侍卫</div>
+                <div class="role-stats">
+                  <span>次数</span>
+                  <span>得分</span>
+                  <span>胜率</span>
+                </div>
+              </div>
+              <div class="role-col">
+                <div class="role-label">农民</div>
+                <div class="role-stats">
+                  <span>次数</span>
+                  <span>得分</span>
+                  <span>胜率</span>
+                </div>
               </div>
             </div>
-            <div class="stat-item">
-              <span>农民方:</span>
-              <div class="stat-values">
-                <span>胜率 {{ 100 - emperorTeamWinRate }}%</span>
-                <span :class="{
-                  'positive': farmerAvgScore > 0,
-                  'negative': farmerAvgScore < 0,
-                  'zero-score': farmerAvgScore === 0
-                }">
-                  平均得分{{ farmerAvgScore > 0 ? '+' : '' }}{{ farmerAvgScore }}
-                </span>
+            
+            <!-- 玩家数据行 -->
+            <div 
+              v-for="player in sortedPlayers" 
+              :key="player.name" 
+              class="player-row"
+            >
+              <div class="player-col">{{ player.name }}</div>
+              <div class="score-col" :class="getScoreClass(player.score)">
+                {{ player.score > 0 ? '+' : '' }}{{ player.score }}
+              </div>
+              
+              <!-- 皇帝角色数据 -->
+              <div class="role-col">
+                <div class="role-stats">
+                  <span>{{ getPlayerRoleCount(player.name, 'emperor') }}</span>
+                  <span :class="getScoreClass(getPlayerRoleTotalScore(player.name, 'emperor'))">
+                    {{ formatScore(getPlayerRoleTotalScore(player.name, 'emperor')) }}
+                  </span>
+                  <span>{{ getPlayerRoleWinRate(player.name, 'emperor') }}%</span>
+                </div>
+              </div>
+              
+              <!-- 侍卫角色数据 -->
+              <div class="role-col">
+                <div class="role-stats">
+                  <span>{{ getPlayerRoleCount(player.name, 'guard') }}</span>
+                  <span :class="getScoreClass(getPlayerRoleTotalScore(player.name, 'guard'))">
+                    {{ formatScore(getPlayerRoleTotalScore(player.name, 'guard')) }}
+                  </span>
+                  <span>{{ getPlayerRoleWinRate(player.name, 'guard') }}%</span>
+                </div>
+              </div>
+              
+              <!-- 农民角色数据 -->
+              <div class="role-col">
+                <div class="role-stats">
+                  <span>{{ getPlayerRoleCount(player.name, 'farmer') }}</span>
+                  <span :class="getScoreClass(getPlayerRoleTotalScore(player.name, 'farmer'))">
+                    {{ formatScore(getPlayerRoleTotalScore(player.name, 'farmer')) }}
+                  </span>
+                  <span>{{ getPlayerRoleWinRate(player.name, 'farmer') }}%</span>
+                </div>
               </div>
             </div>
           </div>
@@ -121,14 +113,15 @@
       
       <div class="summary-actions">
         <button @click="$emit('continue')" class="return-btn">返回游戏</button>
-        <button @click="confirmEndGame" class="end-game-btn">结束重开</button>
+        <button @click="$emit('end')" class="end-game-btn">结束重开</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { computed, ref, onMounted } from 'vue';
+import { computed, ref } from 'vue';
+import { useGameStats } from '../composables/useGameStats';
 
 export default {
   props: {
@@ -144,340 +137,244 @@ export default {
   
   emits: ['continue', 'end'],
   
-  setup(props, { emit }) {
-    // 选择的玩家（用于显示详细统计）
-    const selectedPlayer = ref('');
+  setup(props) {
+    // 创建响应式引用，供composable使用
+    const playersRef = ref(props.players);
+    const gameHistoryRef = ref(props.gameHistory);
     
-    // 组件挂载时，默认选择第一个玩家
-    onMounted(() => {
-      if (props.players.length > 0) {
-        selectedPlayer.value = props.players[0].name;
-      }
+    // 按照得分排序的玩家列表
+    const sortedPlayers = computed(() => {
+      return [...props.players].sort((a, b) => b.score - a.score);
     });
 
-    // 皇帝一方的胜率（皇帝或侍卫是头游的比例）
-    const emperorTeamWinRate = computed(() => {
-      if (props.gameHistory.length === 0) return 0;
-      
-      let winCount = 0;
-      props.gameHistory.forEach(round => {
-        // 获取当前局的排名
-        const ranking = round.ranking || [];
-        // 如果皇帝或侍卫是头游，则算作胜利
-        if (ranking.length > 0 && (ranking[0] === round.emperor || ranking[0] === round.guard)) {
-          winCount++;
-        }
-      });
-      
-      return Math.round((winCount / props.gameHistory.length) * 100);
-    });
-
-    // 皇帝方平均得分
-    const emperorAvgScore = computed(() => {
-      if (props.gameHistory.length === 0) return 0;
-      
-      let totalScore = 0;
-      let count = 0;
-      
-      props.gameHistory.forEach(round => {
-        // 统计皇帝和侍卫的分数
-        if (round.emperor && round.scoreChanges) {
-          totalScore += round.scoreChanges[round.emperor] || 0;
-          count++;
-        }
-        if (round.guard && round.guard !== round.emperor && round.scoreChanges) {
-          totalScore += round.scoreChanges[round.guard] || 0;
-          count++;
-        }
-      });
-      
-      return count > 0 ? parseFloat((totalScore / count).toFixed(2)) : 0;
-    });
-
-    // 农民方平均得分
-    const farmerAvgScore = computed(() => {
-      if (props.gameHistory.length === 0) return 0;
-      
-      let totalScore = 0;
-      let count = 0;
-      
-      props.gameHistory.forEach(round => {
-        // 统计非皇帝非侍卫玩家的分数
-        if (round.scoreChanges) {
-          props.players.forEach(player => {
-            if (player.name !== round.emperor && player.name !== round.guard) {
-              totalScore += round.scoreChanges[player.name] || 0;
-              count++;
-            }
-          });
-        }
-      });
-      
-      return count > 0 ? parseFloat((totalScore / count).toFixed(2)) : 0;
-    });
-
-    // 获取玩家担任特定角色的次数
-    const getPlayerRoleCount = (playerName, role) => {
-      let count = 0;
-      props.gameHistory.forEach(round => {
-        if (role === 'emperor' && round.emperor === playerName) {
-          count++;
-        } else if (role === 'guard' && round.guard === playerName && round.emperor !== playerName) {
-          count++;
-        } else if (role === 'farmer' && playerName !== round.emperor && playerName !== round.guard) {
-          count++;
-        }
-      });
-      return count;
-    };
-
-    // 获取玩家担任特定角色的胜率
-    const getPlayerRoleWinRate = (playerName, role) => {
-      let games = 0;
-      let wins = 0;
-      
-      props.gameHistory.forEach(round => {
-        const ranking = round.ranking || [];
-        const isWin = ranking.length > 0 && ranking[0] === playerName;
-        
-        if (role === 'emperor' && round.emperor === playerName) {
-          games++;
-          if (isWin) wins++;
-        } else if (role === 'guard' && round.guard === playerName && round.emperor !== playerName) {
-          games++;
-          if (isWin) wins++;
-        } else if (role === 'farmer' && playerName !== round.emperor && playerName !== round.guard) {
-          games++;
-          if (isWin) wins++;
-        }
-      });
-      
-      return games > 0 ? Math.round((wins / games) * 100) : 0;
-    };
-
-    // 获取玩家担任特定角色的平均得分
-    const getPlayerRoleAvgScore = (playerName, role) => {
-      let totalScore = 0;
-      let games = 0;
-      
-      props.gameHistory.forEach(round => {
-        const isEmperor = round.emperor === playerName;
-        const isGuard = round.guard === playerName && round.emperor !== playerName;
-        const isFarmer = playerName !== round.emperor && playerName !== round.guard;
-        
-        if ((role === 'emperor' && isEmperor) ||
-            (role === 'guard' && isGuard) ||
-            (role === 'farmer' && isFarmer)) {
-          const scoreChange = round.scoreChanges[playerName] || 0;
-          totalScore += scoreChange;
-          games++;
-        }
-      });
-      
-      return games > 0 ? parseFloat((totalScore / games).toFixed(2)) : 0;
-    };
-
-    const confirmEndGame = () => {
-      // 移除确认对话框，直接结束游戏
-      emit('end');
-    };
-
-    return { 
-      selectedPlayer,
+    // 使用游戏统计composable
+    const {
+      formatScore,
+      getScoreClass,
       emperorTeamWinRate,
       emperorAvgScore,
       farmerAvgScore,
       getPlayerRoleCount,
       getPlayerRoleWinRate,
-      getPlayerRoleAvgScore,
-      confirmEndGame
+      getPlayerRoleTotalScore
+    } = useGameStats(playersRef, gameHistoryRef);
+
+    return { 
+      gameHistoryRef,
+      sortedPlayers,
+      formatScore,
+      getScoreClass,
+      emperorTeamWinRate,
+      emperorAvgScore,
+      farmerAvgScore,
+      getPlayerRoleCount,
+      getPlayerRoleWinRate,
+      getPlayerRoleTotalScore
     };
   }
 };
 </script>
 
 <style scoped>
-.game-summary-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
-.game-summary-container {
-  background-color: white;
-  border-radius: 10px;
-  padding: 20px;
-  width: 100%;
-  max-width: 500px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-}
-
-.game-summary-container h2 {
-  text-align: center;
-  margin-top: 0;
-  margin-bottom: 20px;
-  color: #333;
+.modal-container {
+  max-width: 620px;
+  width: 95%;
 }
 
 .summary-content {
   flex-grow: 1;
 }
 
-.card {
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* 玩家排行表格样式 */
+.players-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  overflow-x: auto;
 }
 
-.card h3 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  text-align: center;
-  font-size: 18px;
-  color: #444;
-}
-
-/* 总分样式 - 改为更紧凑的横向布局 */
-.player-scores {
+.table-header {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-.player-score {
-  flex: 1;
-  min-width: 60px;
-  max-width: 80px;
-  text-align: center;
-  padding: 8px 5px;
-  background-color: #fff;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  margin: 3px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.player-score:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-.player-score.selected {
-  background-color: #e3f2fd;
-  border: 1px solid #4a7bff;
-}
-
-.player-score .player-name {
-  display: block;
   font-weight: bold;
-  font-size: 0.95em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 5px;
+  border-bottom: 2px solid #ddd;
+  padding: 8px 0;
 }
 
-/* 玩家详细数据样式 */
-.player-details {
-  margin-top: 15px;
-  background-color: #fff;
-  border-radius: 6px;
-  padding: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.role-header {
+.player-row {
   display: flex;
-  margin-bottom: 10px;
   border-bottom: 1px solid #eee;
-  padding-bottom: 8px;
-  font-weight: bold;
-  color: #555;
+  padding: 8px 0;
 }
 
-.role-header .role-title {
-  width: 50px;
+.player-row:last-child {
+  border-bottom: none;
+}
+
+.player-col, .score-col, .role-col {
+  padding: 0 5px;
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
-.role-header .role-data {
-  flex: 1;
-  display: flex;
-  justify-content: space-between;
+.player-col {
+  width: 16%; /* 从20%减少到16% */
+  font-weight: bold;
+  padding-left: 10px;
+  padding-right: 0; /* 减少右边距 */
 }
 
-.role-header .role-data span {
-  flex: 1;
+.score-col {
+  width: 10%; /* 从15%减少到10% */
+  font-weight: bold;
+  justify-content: flex-end;
+  padding-right: 8px;
+  padding-left: 0; /* 减少左边距 */
+  white-space: nowrap;
+  text-align: right;
+}
+
+.role-col {
+  width: 24%; /* 从22%增加到24%，给其他数据更多空间 */
+  flex-direction: column;
+}
+
+.role-label {
+  font-weight: bold;
+  margin-bottom: 3px;
   text-align: center;
-  padding: 0 5px;
 }
 
 .role-stats {
   display: flex;
-  flex-direction: column;
+  width: 100%;
 }
 
-.role-row {
-  display: flex;
-  margin-bottom: 10px;
+.role-stats span {
+  flex: 1;
+  text-align: right;
+  font-size: 0.9em;
+  padding-right: 8px;
+  min-width: 30px; /* 确保每列有最小宽度 */
 }
 
-.role-title {
-  width: 50px;
+/* 表头也右对齐以匹配数据 */
+.table-header .role-stats span {
+  text-align: right;
+  padding-right: 8px;
+}
+
+/* 让数字使用等宽字体，确保对齐 */
+.role-stats span, .score-col {
+  font-family: 'Courier New', monospace;
+  letter-spacing: -0.5px; /* 微调字符间距 */
+}
+
+/* 确保数字单元格有足够的宽度显示内容不换行 */
+.score-col {
+  white-space: nowrap;
+  text-align: right;
+  justify-content: flex-end; /* 改为右对齐 */
+  padding-right: 8px;
+}
+
+/* 总分也右对齐，使用等宽字体 */
+.player-col {
+  width: 20%;
   font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding-left: 10px;
 }
 
-.role-data {
-  flex: 1;
-  display: flex;
-  justify-content: space-between;
+/* 让表格总宽度有些富余，避免挤压 */
+.players-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  overflow-x: auto;
 }
 
-.role-data span {
-  flex: 1;
-  text-align: center;
-  padding: 0 5px;
-}
-
-.role-legend {
+.summary-actions {
   display: flex;
   justify-content: space-between;
-  font-size: 0.8em;
-  color: #777;
-  margin-top: 5px;
-  border-top: 1px solid #eee;
-  padding-top: 5px;
+  margin-top: 20px;
+  gap: 15px;
 }
 
-.role-legend span {
+.return-btn, .end-game-btn {
   flex: 1;
-  text-align: center;
+  padding: 12px;
+  font-weight: bold;
 }
 
-/* 统计项样式 */
-.stats-grid {
-  display: flex;
-  flex-direction: column;
+.return-btn {
+  background-color: #4a7bff;
+}
+
+.end-game-btn {
+  background-color: #FF5722;
+}
+
+/* 响应式调整 */
+@media (max-width: 600px) {
+  .modal-container {
+    padding: 15px;
+  }
+  
+  .player-col {
+    width: 15%; /* 进一步缩小 */
+    padding-left: 5px;
+  }
+  
+  .score-col {
+    width: 12%;
+    padding-right: 5px;
+  }
+  
+  .role-col {
+    width: 24%;
+  }
+  
+  .role-stats span {
+    font-size: 0.8em;
+  }
+  
+  .table-header, .player-row {
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-container {
+    padding: 10px;
+  }
+  
+  .players-table {
+    font-size: 0.8em;
+  }
+  
+  .player-col {
+    width: 14%;
+    padding-left: 2px;
+  }
+  
+  .score-col {
+    width: 10%;
+    padding-right: 2px;
+  }
+  
+  .role-col {
+    width: 25%; /* 补偿剩余空间 */
+  }
+  
+  .role-stats span {
+    padding-right: 2px; /* 在小屏幕上减小右边距 */
+    letter-spacing: -0.8px; /* 在小屏幕上进一步减小间距 */
+    font-size: 0.75em; /* 在小屏幕上稍微减小字体 */
+  }
+  
+  .score-col {
+    padding-right: 2px;
+    letter-spacing: -0.8px;
+  }
 }
 
 .stat-item {
@@ -501,67 +398,5 @@ export default {
 .stat-values span {
   min-width: 80px;
   text-align: right;
-}
-
-.summary-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-  gap: 15px;
-}
-
-.return-btn {
-  flex: 1;
-  background-color: #4a7bff; /* 改为蓝色，与确认每局的体验一致 */
-  padding: 12px;
-  font-weight: bold;
-}
-
-.end-game-btn {
-  flex: 1;
-  background-color: #FF5722;
-  padding: 12px;
-  font-weight: bold;
-}
-
-.positive {
-  color: #F44336;  /* 从绿色改为红色 */
-  font-weight: bold;
-}
-
-.negative {
-  color: #4CAF50;  /* 从红色改为绿色 */
-  font-weight: bold;
-}
-
-.zero-score {
-  color: #757575;  /* 灰色表示零分 */
-  font-weight: normal;
-}
-
-@media (max-width: 480px) {
-  .game-summary-container {
-    padding: 15px;
-  }
-  
-  .player-score {
-    min-width: 55px;
-    padding: 6px 3px;
-    margin: 2px;
-  }
-  
-  .role-title, .role-header .role-title {
-    width: 40px;
-    font-size: 0.9em;
-  }
-  
-  .summary-actions {
-    flex-direction: row; /* 确保在移动端也保持水平显示 */
-  }
-  
-  .return-btn, .end-game-btn {
-    width: auto; /* 移除固定宽度 */
-    margin: 0; /* 移除额外边距 */
-  }
 }
 </style>
