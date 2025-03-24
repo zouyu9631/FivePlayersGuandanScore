@@ -1,11 +1,14 @@
 <template>
   <div class="container">
-    <h1>五人掼蛋记分器</h1>
-    
-    <!-- 添加问号图标按钮 -->
-    <button class="rules-button" @click="showRules = true" title="游戏规则">
-      <span class="rules-icon">?</span>
-    </button>
+    <!-- 修改这里，添加header-container -->
+    <div class="header-container">
+      <h1>五人掼蛋记分器</h1>
+      
+      <!-- 添加问号图标按钮 -->
+      <button class="rules-button" @click="showRules = true" title="游戏规则">
+        <span class="rules-icon">?</span>
+      </button>
+    </div>
     
     <div class="card">
       <h2>输入五位玩家的名字</h2>
@@ -196,14 +199,26 @@ export default {
   padding: 10px 0;
 }
 
+/* 添加标题容器样式 */
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.header-container h1 {
+  margin: 0;
+}
+
 /* 修改问号按钮样式，确保在所有设备上都保持圆形 */
 .rules-button {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+  position: relative; /* 改为相对定位 */
+  top: 0;
+  right: 0;
   width: 36px;
   height: 36px;
-  aspect-ratio: 1/1; /* 强制保持1:1比例 */
   border-radius: 50%;
   background-color: rgba(74, 123, 255, 0.05);
   color: rgba(74, 123, 255, 0.7);
@@ -216,6 +231,13 @@ export default {
   transition: all 0.2s ease;
   padding: 0;
   box-sizing: border-box; /* 确保边框不会改变尺寸 */
+  min-width: 36px; /* 添加最小宽度 */
+  min-height: 36px; /* 添加最小高度 */
+  max-width: 36px; /* 添加最大宽度 */
+  max-height: 36px; /* 添加最大高度 */
+  overflow: hidden; /* 防止内容溢出 */
+  -webkit-border-radius: 50%; /* 兼容老旧浏览器 */
+  -moz-border-radius: 50%; /* 兼容老旧浏览器 */
 }
 
 .rules-button:hover {
@@ -227,15 +249,24 @@ export default {
 .rules-icon {
   font-size: 20px;
   font-weight: normal;
+  line-height: 1; /* 确保文本垂直居中 */
+  text-align: center; /* 确保文本水平居中 */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (max-width: 480px) {
   .rules-button {
-    top: 15px;
-    right: 15px;
+    /* 删除top和right属性 */
     width: 32px;
     height: 32px;
-    aspect-ratio: 1/1; /* 在移动设备上也保持1:1比例 */
+    min-width: 32px; /* 保持一致的最小宽度 */
+    min-height: 32px; /* 保持一致的最小高度 */
+    max-width: 32px; /* 保持一致的最大宽度 */
+    max-height: 32px; /* 保持一致的最大高度 */
   }
   
   .rules-icon {
