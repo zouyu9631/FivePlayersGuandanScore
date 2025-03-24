@@ -10,9 +10,10 @@
         <section class="rule-section">
           <h3>基本设置</h3>
           <ul>
-            <li><strong>牌数：</strong>使用3副牌，去掉 2 张大王，保留 1 张大王</li>
-            <li><strong>百搭牌：</strong>百搭牌始终是红桃 2</li>
+            <li><strong>牌数：</strong>使用 3 副牌，去掉 2 张大王，保留 1 张大王</li>
+            <li><strong>级牌：</strong>每局都打 2，百搭牌始终是红桃 2</li>
             <li><strong>出牌顺序：</strong>每局游戏由皇帝先出牌</li>
+            <li><strong>摸牌顺序：</strong>第一局随机决定起始玩家，从第二局开始由上一局的皇帝先摸牌</li>
           </ul>
         </section>
         
@@ -41,6 +42,9 @@
           <div class="special-note">
             <strong>特殊情况：</strong>若未被展示的另一张叫牌，也在皇帝手中，则皇帝自己单独组队
           </div>
+          <div class="identity-note">
+            <strong>重要说明：</strong>侍卫在打出叫牌时，必须明确告知所有玩家这是叫牌
+          </div>
         </section>
         
         <section class="rule-section">
@@ -49,6 +53,16 @@
             <li>大王价值相当于 6.5 炸（能压 6 个 A，但不能压 7 个 2）</li>
             <li>三个小王一起出，效力等同于一个大王</li>
             <li>未被展示的叫牌，在游戏过程中单独打出，这张牌可以压过任何除了大小王的单张牌</li>
+          </ul>
+        </section>
+        
+        <section class="rule-section">
+          <h3>接风规则</h3>
+          <p>当一名玩家打出最后一手牌且其他玩家都不要这手牌时，接风的人为后面第一个*可能*与这名玩家一伙的人。具体来说：</p>
+          <ul>
+            <li>如果走的是侍卫：接风的人是皇帝</li>
+            <li>如果走的是皇帝：在侍卫明确前，接风的人是下一个玩家；在侍卫明确后，接风的人是侍卫</li>            
+            <li>如果走的是农民：在侍卫明确前，接风的人是下一个非皇帝玩家；在侍卫明确后，接风的人是下一个农民</li>
           </ul>
         </section>
         
@@ -261,6 +275,14 @@ export default {
 .special-note {
   background-color: var(--emperor-color);
   border-left: 4px solid var(--warning-color);
+  padding: 10px 15px;
+  margin: 15px 0;
+  border-radius: 4px;
+}
+
+.identity-note {
+  background-color: #f0f7ff;
+  border-left: 4px solid #1e88e5;
   padding: 10px 15px;
   margin: 15px 0;
   border-radius: 4px;
