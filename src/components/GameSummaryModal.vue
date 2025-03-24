@@ -15,7 +15,11 @@
               @click="selectedPlayer = player.name"
             >
               <span class="player-name">{{ player.name }}</span>
-              <span :class="{ 'positive': player.score > 0, 'negative': player.score < 0 }">
+              <span :class="{ 
+                'positive': player.score > 0, 
+                'negative': player.score < 0,
+                'zero-score': player.score === 0 
+              }">
                 {{ player.score > 0 ? '+' : '' }}{{ player.score }}
               </span>
             </div>
@@ -37,7 +41,11 @@
                 <div class="role-data">
                   <span>{{ getPlayerRoleCount(selectedPlayer, 'emperor') }}次</span>
                   <span>{{ getPlayerRoleWinRate(selectedPlayer, 'emperor') }}%</span>
-                  <span :class="getPlayerRoleAvgScore(selectedPlayer, 'emperor') > 0 ? 'positive' : 'negative'">
+                  <span :class="{
+                    'positive': getPlayerRoleAvgScore(selectedPlayer, 'emperor') > 0,
+                    'negative': getPlayerRoleAvgScore(selectedPlayer, 'emperor') < 0,
+                    'zero-score': getPlayerRoleAvgScore(selectedPlayer, 'emperor') === 0
+                  }">
                     {{ getPlayerRoleAvgScore(selectedPlayer, 'emperor') > 0 ? '+' : '' }}{{ getPlayerRoleAvgScore(selectedPlayer, 'emperor') }}
                   </span>
                 </div>
@@ -47,7 +55,11 @@
                 <div class="role-data">
                   <span>{{ getPlayerRoleCount(selectedPlayer, 'guard') }}次</span>
                   <span>{{ getPlayerRoleWinRate(selectedPlayer, 'guard') }}%</span>
-                  <span :class="getPlayerRoleAvgScore(selectedPlayer, 'guard') > 0 ? 'positive' : 'negative'">
+                  <span :class="{
+                    'positive': getPlayerRoleAvgScore(selectedPlayer, 'guard') > 0,
+                    'negative': getPlayerRoleAvgScore(selectedPlayer, 'guard') < 0,
+                    'zero-score': getPlayerRoleAvgScore(selectedPlayer, 'guard') === 0
+                  }">
                     {{ getPlayerRoleAvgScore(selectedPlayer, 'guard') > 0 ? '+' : '' }}{{ getPlayerRoleAvgScore(selectedPlayer, 'guard') }}
                   </span>
                 </div>
@@ -57,7 +69,11 @@
                 <div class="role-data">
                   <span>{{ getPlayerRoleCount(selectedPlayer, 'farmer') }}次</span>
                   <span>{{ getPlayerRoleWinRate(selectedPlayer, 'farmer') }}%</span>
-                  <span :class="getPlayerRoleAvgScore(selectedPlayer, 'farmer') > 0 ? 'positive' : 'negative'">
+                  <span :class="{
+                    'positive': getPlayerRoleAvgScore(selectedPlayer, 'farmer') > 0,
+                    'negative': getPlayerRoleAvgScore(selectedPlayer, 'farmer') < 0,
+                    'zero-score': getPlayerRoleAvgScore(selectedPlayer, 'farmer') === 0
+                  }">
                     {{ getPlayerRoleAvgScore(selectedPlayer, 'farmer') > 0 ? '+' : '' }}{{ getPlayerRoleAvgScore(selectedPlayer, 'farmer') }}
                   </span>
                 </div>
@@ -77,7 +93,11 @@
               <span>皇帝方:</span>
               <div class="stat-values">
                 <span>胜率 {{ emperorTeamWinRate }}%</span>
-                <span :class="emperorAvgScore > 0 ? 'positive' : 'negative'">
+                <span :class="{
+                  'positive': emperorAvgScore > 0,
+                  'negative': emperorAvgScore < 0,
+                  'zero-score': emperorAvgScore === 0
+                }">
                   平均得分{{ emperorAvgScore > 0 ? '+' : '' }}{{ emperorAvgScore }}
                 </span>
               </div>
@@ -86,7 +106,11 @@
               <span>农民方:</span>
               <div class="stat-values">
                 <span>胜率 {{ 100 - emperorTeamWinRate }}%</span>
-                <span :class="farmerAvgScore > 0 ? 'positive' : 'negative'">
+                <span :class="{
+                  'positive': farmerAvgScore > 0,
+                  'negative': farmerAvgScore < 0,
+                  'zero-score': farmerAvgScore === 0
+                }">
                   平均得分{{ farmerAvgScore > 0 ? '+' : '' }}{{ farmerAvgScore }}
                 </span>
               </div>
@@ -501,13 +525,18 @@ export default {
 }
 
 .positive {
-  color: #4CAF50;
+  color: #F44336;  /* 从绿色改为红色 */
   font-weight: bold;
 }
 
 .negative {
-  color: #F44336;
+  color: #4CAF50;  /* 从红色改为绿色 */
   font-weight: bold;
+}
+
+.zero-score {
+  color: #757575;  /* 灰色表示零分 */
+  font-weight: normal;
 }
 
 @media (max-width: 480px) {

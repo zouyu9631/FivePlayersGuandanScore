@@ -17,7 +17,10 @@
               <span v-if="player.name === guard && player.name !== emperor" class="guard-indicator">🛡️</span>
               <span v-if="player.name === emperor && player.name === guard" class="self-guard-indicator">👑🛡️</span>
             </span>
-            <span :class="{ 'positive': scoreChanges[player.name] > 0, 'negative': scoreChanges[player.name] < 0 }">
+            <span :class="{ 
+              'positive': scoreChanges[player.name] > 0, 
+              'negative': scoreChanges[player.name] < 0
+            }">
               {{ scoreChanges[player.name] > 0 ? '+' : '' }}{{ scoreChanges[player.name] }}
             </span>
           </div>
@@ -112,14 +115,16 @@ export default {
 }
 
 .positive {
-  color: #4CAF50;
+  color: #F44336;  /* 从绿色改为红色 */
   font-weight: bold;
 }
 
 .negative {
-  color: #F44336;
+  color: #4CAF50;  /* 从红色改为绿色 */
   font-weight: bold;
 }
+
+/* 移除零分样式，因为在游戏规则中不会出现零分情况 */
 
 .emperor-indicator,
 .guard-indicator,

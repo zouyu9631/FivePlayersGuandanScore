@@ -295,3 +295,18 @@ body.dragging-active {
     opacity: 0.8;
   }
 }
+
+.positive {
+  color: #F44336;  /* 从绿色改为红色 */
+  font-weight: bold;
+}
+
+.negative {
+  color: #4CAF50;  /* 从红色改为绿色 */
+  font-weight: bold;
+}
+
+.zero-score {
+  color: #757575;  /* 灰色表示零分 */
+  font-weight: normal;
+}

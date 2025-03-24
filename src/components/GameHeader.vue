@@ -7,7 +7,11 @@
     <div class="player-scores">
       <div v-for="player in players" :key="player.name" class="player-score">
         <span>{{ player.name }}</span>
-        <span :class="{ 'positive': player.score > 0, 'negative': player.score < 0 }">
+        <span :class="{ 
+          'positive': player.score > 0, 
+          'negative': player.score < 0,
+          'zero-score': player.score === 0 
+        }">
           {{ player.score > 0 ? '+' : '' }}{{ player.score }}
         </span>
       </div>
@@ -78,13 +82,18 @@ export default {
 }
 
 .positive {
-  color: #4CAF50;
+  color: #F44336;  /* 从绿色改为红色 */
   font-weight: bold;
 }
 
 .negative {
-  color: #F44336;
+  color: #4CAF50;  /* 从红色改为绿色 */
   font-weight: bold;
+}
+
+.zero-score {
+  color: #757575;  /* 灰色表示零分 */
+  font-weight: normal;
 }
 
 .history-btn {
