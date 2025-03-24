@@ -1,6 +1,12 @@
 <template>
   <div class="container">
     <h1>五人掼蛋记分器</h1>
+    
+    <!-- 添加问号图标按钮 -->
+    <button class="rules-button" @click="showRules = true" title="游戏规则">
+      <span class="rules-icon">?</span>
+    </button>
+    
     <div class="card">
       <h2>输入五位玩家的名字</h2>
       <div class="players-container">
@@ -23,16 +29,25 @@
     <div class="credits">
       感谢许公子，让掼蛋多了一份精彩
     </div>
+    
+    <!-- 添加规则模态框 -->
+    <RulesModal v-if="showRules" @close="showRules = false" />
   </div>
 </template>
 
 <script>
 import { ref } from 'vue';
+import RulesModal from './RulesModal.vue';
 
 export default {
+  components: {
+    RulesModal
+  },
   emits: ['start-game'],
   setup(props, { emit }) {
     const defaultNames = ["关羽", "张飞", "赵云", "马超", "黄忠"];
+    // 添加规则显示状态变量
+    const showRules = ref(false);
     
     const players = ref([
       { name: '', score: 0 },
@@ -116,7 +131,8 @@ export default {
       startGame,
       validateName,
       onFocus,
-      isDefaultName
+      isDefaultName,
+      showRules // 添加到返回值
     };
   }
 };
@@ -178,5 +194,52 @@ export default {
   font-style: italic;
   margin-top: auto;
   padding: 10px 0;
+}
+
+/* 修改问号按钮样式，确保在所有设备上都保持圆形 */
+.rules-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  aspect-ratio: 1/1; /* 强制保持1:1比例 */
+  border-radius: 50%;
+  background-color: rgba(74, 123, 255, 0.05);
+  color: rgba(74, 123, 255, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: 1.5px solid rgba(74, 123, 255, 0.5);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
+  padding: 0;
+  box-sizing: border-box; /* 确保边框不会改变尺寸 */
+}
+
+.rules-button:hover {
+  background-color: rgba(74, 123, 255, 0.2);
+  color: rgba(74, 123, 255, 0.9);
+  transform: scale(1.05);
+}
+
+.rules-icon {
+  font-size: 20px;
+  font-weight: normal;
+}
+
+@media (max-width: 480px) {
+  .rules-button {
+    top: 15px;
+    right: 15px;
+    width: 32px;
+    height: 32px;
+    aspect-ratio: 1/1; /* 在移动设备上也保持1:1比例 */
+  }
+  
+  .rules-icon {
+    font-size: 18px;
+  }
 }
 </style>
