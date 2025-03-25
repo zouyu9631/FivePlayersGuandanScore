@@ -29,9 +29,6 @@
         </div>
       </div>
     </div>
-    <div class="credits">
-      感谢许公子，让掼蛋多了一份精彩
-    </div>
     
     <!-- 添加规则模态框 -->
     <RulesModal v-if="showRules" @close="showRules = false" />

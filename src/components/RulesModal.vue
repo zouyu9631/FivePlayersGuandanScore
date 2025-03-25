@@ -134,10 +134,10 @@
             </tbody>
           </table>
         </section>
-      </div>
-      
-      <div class="rules-footer">
-        <button class="close-btn" @click="$emit('close')">关闭</button>
+        
+        <div class="credits">
+          感谢许公子，让掼蛋多了一份精彩
+        </div>
       </div>
     </div>
   </div>
@@ -319,23 +319,14 @@ export default {
   background-color: #f9f9f9;
 }
 
-.rules-footer {
-  padding: 15px;
-  border-top: 1px solid var(--border-color);
+.credits {
   text-align: center;
-  background: white;
-  position: sticky;
-  bottom: 0;
-}
-
-.close-btn {
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 10px 25px;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
+  font-size: 12px;
+  color: #888;
+  font-style: italic;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  padding: 10px 0;
 }
 
 @media (max-width: 480px) {
