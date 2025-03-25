@@ -1,6 +1,6 @@
 <template>
   <div class="ranking-section">
-    <h3>拖拽排序/点击选身份:</h3>
+    <h3>请设置本局玩家身份和排名</h3>
     <draggable 
       v-model="internalValue" 
       item-key="name"
@@ -39,6 +39,11 @@
         </div>
       </template>
     </draggable>
+    
+    <div class="ranking-tip">
+      <span class="tip-icon">💡</span>
+      <span class="tip-text">拖动 ≡ 图标可调整名次，点击名字可选择身份</span>
+    </div>
   </div>
 </template>
 
@@ -97,30 +102,43 @@ export default {
 <style scoped>
 .ranking-section {
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 15px;
-  margin: 15px 0;
-  box-shadow: var(--card-shadow);
+  margin: 15px 0 20px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  border-left: 4px solid #4CAF50; /* 绿色左边框 */
+}
+
+.ranking-section h3 {
+  margin-top: 0;
+  color: #2e7d32;
+  font-size: 18px;
+  border-bottom: 1px solid #e8f5e9;
+  padding-bottom: 8px;
+  margin-bottom: 15px;
 }
 
 .player-rank {
   display: flex;
   align-items: center;
-  padding: 8px 0;
+  padding: 0;
   background: #f9f9f9;
   border: 1px solid var(--border-color);
-  border-radius: 6px;
-  margin-bottom: 8px;
-  transition: background 0.2s, transform 0.1s;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  transition: all 0.2s;
   touch-action: pan-y;
   z-index: 1;
   position: relative;
-  height: 40px;
+  height: 50px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .player-rank:hover {
   background: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .drag-handle {
@@ -147,7 +165,6 @@ export default {
 .drag-icon {
   color: #777;
   font-size: 22px;
-  transform: rotate(90deg);
   -webkit-user-drag: none;
   user-select: none;
   display: inline-block;
@@ -254,6 +271,26 @@ export default {
 .dragging {
   cursor: -webkit-grabbing !important;
   cursor: grabbing !important;
+}
+
+.ranking-tip {
+  display: flex;
+  align-items: center;
+  background-color: #e8f5e9;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-top: 15px;
+  font-size: 13px;
+  color: #2e7d32;
+}
+
+.tip-icon {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.tip-text {
+  flex: 1;
 }
 
 @media (max-width: 768px) {

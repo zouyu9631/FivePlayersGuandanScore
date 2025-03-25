@@ -15,12 +15,13 @@
     </div>
   </div>
   <div v-else class="card-display">
-    <div class="round-info">第 {{ currentRound }} 局叫牌：</div>
+    <div class="round-label">第 {{ currentRound }} 局</div>
     <div class="card-selection" @click="openSelector">
-      <div class="selected-card" :class="{ 'red-card': isRedCard(selectedCard) }">
+      <div class="called-card-label">叫牌:</div>
+      <div class="selected-card" :class="{ 'red-card': isRedCard(selectedCard), 'joker-card': selectedCard === '🃏' }">
         {{ selectedCard }}
       </div>
-      <div v-if="showHint" class="card-hint" @click.stop="dismissHint">(点击更换叫牌)</div>
+      <div v-if="showHint" class="card-hint" @click.stop="dismissHint">(点击更换)</div>
     </div>
   </div>
 </template>
@@ -187,50 +188,62 @@ export default {
 
 .card-display {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   background: white;
-  border-radius: 8px;
-  padding: 8px 15px; /* 减小上下内边距从12px到8px */
-  margin: 12px 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  padding: 12px 15px;
+  margin: 12px 0 20px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
   position: relative;
   -webkit-tap-highlight-color: transparent;
-  height: 48px; /* 设置固定高度 */
+  min-height: 60px;
+  border-left: 4px solid #ff9800; /* 橙色左边框 */
 }
 
-.round-info {
-  position: absolute;
-  left: 15px;
-  font-size: 17px; /* 增加字体大小从15px到17px */
+.round-label {
+  font-size: 18px;
   font-weight: 500;
   color: #333;
   white-space: nowrap;
+  padding: 4px 8px;
+  background-color: #fff8e1;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .card-selection {
-  text-align: center;
-  cursor: pointer;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  margin: 0 auto;
-  padding-left: 30px;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.called-card-label {
+  font-size: 16px;
+  margin-right: 10px;
+  color: #555;
 }
 
 .selected-card {
-  font-size: 32px; /* 减小字体大小从36px到32px */
-  margin-bottom: 0; /* 移除底部间距 */
+  font-size: 32px;
+  margin: 0 6px;
+}
+
+/* 调整小王牌的大小 */
+.joker-card {
+  font-size: 42px; /* 进一步增大小王的大小 */
+  transform: translateY(-3px); /* 微调上移补偿更大的字体 */
 }
 
 .card-hint {
-  font-size: 16px; /* 增加提示文字大小从12px到13px */
-  color: #666;
-  padding: 0; /* 移除上下内边距 */
-  cursor: pointer;
-  position: absolute;
-  bottom: 3px; /* 将提示定位到底部 */
-  right: 8px; /* 向右对齐 */
+  font-size: 12px;
+  color: #999;
+  font-style: italic;
+  margin-left: 8px;
 }
 
 .joker {
@@ -288,14 +301,27 @@ export default {
     font-size: 30px; /* 移动端进一步减小字体 */
   }
   
+  .joker-card {
+    font-size: 38px; /* 移动端也增大小王的大小 */
+  }
+  
   .card-hint {
     font-size: 12px;
     bottom: 2px;
   }
   
   .card-display {
-    padding: 6px 15px; /* 在移动端进一步减小上下内边距 */
-    height: 46px; /* 调整移动端高度 */
+    padding: 10px 15px;
+    min-height: 55px;
+  }
+  
+  .round-label {
+    font-size: 16px;
+    padding: 3px 8px;
+  }
+  
+  .called-card-label {
+    font-size: 14px;
   }
   
   .joker {

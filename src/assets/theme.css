@@ -34,6 +34,12 @@
   
   /* 其他UI颜色 */
   --border-color: #ddd;
-  --card-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  --card-shadow: 0 3px 6px rgba(0,0,0,0.1);
   --modal-overlay: rgba(0, 0, 0, 0.7);
+  
+  /* 新增：卡片边框颜色 */
+  --header-border-color: var(--primary-color);
+  --history-border-color: #9c27b0;
+  --card-selector-border-color: #ff9800;
+  --ranking-border-color: #4CAF50;
 }

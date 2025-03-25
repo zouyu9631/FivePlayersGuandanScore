@@ -120,28 +120,52 @@ export default {
 
 <style scoped>
 .history-panel {
-  background: white;
-  border-radius: 8px;
-  padding: 10px; /* 从12px减小到10px */
-  margin-bottom: 15px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  max-height: 300px;
+  flex: 1;
+  padding: 0 15px 15px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  /* 移除未使用的背景、边框和阴影，因为现在在抽屉中 */
+  background: white;
+  border-radius: 0;
+  margin: 0;
+  box-shadow: none;
+  max-height: none;
+  /* 移除所有边框 */
+  border-left: none;
+}
+
+/* 当在历史抽屉中显示时应用特殊样式 */
+.history-drawer .history-panel {
+  max-height: none; /* 允许在抽屉内灵活高度 */
+  box-shadow: none; /* 移除阴影，因为抽屉已经有阴影 */
+  border-radius: 0; /* 移除圆角，使其适应抽屉 */
+  margin: 0; /* 移除外边距 */
 }
 
 .no-history {
   text-align: center;
   color: #666;
-  padding: 20px 0;
+  padding: 40px 0;
+  font-style: italic;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* 优化滚动性能 */
 .history-table-container {
   overflow-y: auto;
   overflow-x: auto;
   flex-grow: 1;
-  margin-top: 2px; /* 添加少量顶部边距代替移除的标题 */
+  border-radius: 6px;
+  background-color: #fcfcfc;
+  border: 1px solid #f0f0f0;
+  -webkit-overflow-scrolling: touch; /* 确保iOS上的滚动流畅 */
+  will-change: transform; /* 提示浏览器这个元素将会有变化 */
+  transform: translateZ(0); /* 启用硬件加速 */
+  margin-top: 5px;
 }
 
 .history-table {
@@ -153,12 +177,13 @@ export default {
 .history-table th {
   padding: 6px 4px; /* 从8px减小到6px */
   text-align: center;
-  background-color: #f5f5f5;
+  background-color: #f0f0f0;
   position: sticky;
   top: 0;
   z-index: 1;
   border-bottom: 2px solid var(--border-color);
   font-size: 0.92em; /* 减小字体大小 */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 /* 局号格样式 */
@@ -262,6 +287,10 @@ export default {
 
 .role-row {
   background-color: white;
+}
+
+.role-row:hover, .score-row:hover {
+  background-color: #f5f5f5;
 }
 
 /* 移动端优化 */
