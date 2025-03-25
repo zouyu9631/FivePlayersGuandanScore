@@ -77,7 +77,7 @@ function applyTeamRules(changes, playerRanking, emperor, guard, emperorRank, gua
   changes[emperor] += teamScore;
   changes[guard] += teamScore;
   
-  // 设置农民的分数
+  // 设置平民的分数
   playerRanking.forEach(player => {
     if (player.name !== emperor && player.name !== guard) {
       changes[player.name] += farmerScore;

@@ -35,7 +35,7 @@ export function useGameStats(players, gameHistory) {
     return count > 0 ? parseFloat((totalScore / count).toFixed(2)) : 0;
   });
 
-  // 农民方平均得分
+  // 平民方平均得分
   const farmerAvgScore = computed(() => {
     if (gameHistory.value.length === 0) return 0;
     

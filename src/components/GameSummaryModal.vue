@@ -17,9 +17,9 @@
               </div>
             </div>
             
-            <!-- 农民方统计 -->
+            <!-- 平民方统计 -->
             <div class="stat-item">
-              <span>农民方:</span>
+              <span>平民方:</span>
               <div class="stat-values">
                 <span>胜率 {{ 100-emperorTeamWinRate }}%</span>
                 <span :class="getScoreClass(farmerAvgScore)">
@@ -54,7 +54,7 @@
                 </div>
               </div>
               <div class="role-col">
-                <div class="role-label">农民</div>
+                <div class="role-label">平民</div>
                 <div class="role-stats">
                   <span>次数</span>
                   <span>得分</span>
@@ -96,7 +96,7 @@
                 </div>
               </div>
               
-              <!-- 农民角色数据 -->
+              <!-- 平民角色数据 -->
               <div class="role-col">
                 <div class="role-stats">
                   <span>{{ getPlayerRoleCount(player.name, 'farmer') }}</span>
