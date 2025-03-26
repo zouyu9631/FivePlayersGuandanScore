@@ -12,6 +12,7 @@
           <ul>
             <li><strong>牌数：</strong>使用 3 副牌，去掉 2 张大王，保留 1 张大王</li>
             <li><strong>级牌：</strong>每局都打 2，百搭牌始终是红桃 2</li>
+            <li><strong>基础规则：</strong>出牌规则和牌力大小跟普通四人掼蛋相同</li>
             <li><strong>出牌顺序：</strong>每局游戏由皇帝先出牌</li>
             <li><strong>摸牌顺序：</strong>第一局随机决定起始玩家，从第二局开始由上一局的皇帝先摸牌</li>
           </ul>
