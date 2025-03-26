@@ -2,11 +2,9 @@
   <div class="modal-overlay" @click="$emit('continue')">
     <div class="modal-container" @click.stop>
       <div class="summary-content">
-        <!-- 整体数据统计 -->
         <div class="overall-stats card">
           <h3>本次游戏共 {{ gameHistoryRef.length }} 局</h3>
           <div class="stats-grid">
-            <!-- 皇帝方统计 -->
             <div class="stat-item">
               <span>皇帝方:</span>
               <div class="stat-values">
@@ -17,7 +15,6 @@
               </div>
             </div>
             
-            <!-- 平民方统计 -->
             <div class="stat-item">
               <span>平民方:</span>
               <div class="stat-values">
@@ -30,10 +27,8 @@
           </div>
         </div>
         
-        <!-- 玩家排行榜 -->
         <div class="players-ranking card">
           <div class="players-table">
-            <!-- 表格标题行 -->
             <div class="table-header">
               <div class="player-col">玩家</div>
               <div class="score-col">总分</div>
@@ -63,7 +58,6 @@
               </div>
             </div>
             
-            <!-- 玩家数据行 -->
             <div 
               v-for="player in sortedPlayers" 
               :key="player.name" 
@@ -74,7 +68,6 @@
                 {{ player.score > 0 ? '+' : '' }}{{ player.score }}
               </div>
               
-              <!-- 皇帝角色数据 -->
               <div class="role-col">
                 <div class="role-stats">
                   <span>{{ getPlayerRoleCount(player.name, 'emperor') }}</span>
@@ -85,7 +78,6 @@
                 </div>
               </div>
               
-              <!-- 侍卫角色数据 -->
               <div class="role-col">
                 <div class="role-stats">
                   <span>{{ getPlayerRoleCount(player.name, 'guard') }}</span>
@@ -96,7 +88,6 @@
                 </div>
               </div>
               
-              <!-- 平民角色数据 -->
               <div class="role-col">
                 <div class="role-stats">
                   <span>{{ getPlayerRoleCount(player.name, 'farmer') }}</span>
@@ -112,8 +103,8 @@
       </div>
       
       <div class="summary-actions">
-        <button @click="$emit('continue')" class="return-btn">返回游戏</button>
-        <button @click="$emit('end')" class="end-game-btn">结束重开</button>
+        <button @click="$emit('continue')" class="action-btn return-btn">返回游戏</button>
+        <button @click="$emit('end')" class="action-btn end-game-btn">结束重开</button>
       </div>
     </div>
   </div>
@@ -139,14 +130,11 @@ export default {
   emits: ['continue', 'end'],
   
   setup(props) {
-    // 创建响应式引用，供composable使用
     const playersRef = ref(props.players);
     const gameHistoryRef = ref(props.gameHistory);
     
-    // 按照得分排序的玩家列表
     const sortedPlayers = computed(() => sortPlayers(props.players));
 
-    // 使用游戏统计composable
     const {
       emperorTeamWinRate,
       emperorAvgScore,
@@ -182,7 +170,6 @@ export default {
   flex-grow: 1;
 }
 
-/* 玩家排行表格样式 */
 .players-table {
   width: 100%;
   border-collapse: collapse;
@@ -214,24 +201,24 @@ export default {
 }
 
 .player-col {
-  width: 16%; /* 从20%减少到16% */
+  width: 16%;
   font-weight: bold;
   padding-left: 10px;
-  padding-right: 0; /* 减少右边距 */
+  padding-right: 0;
 }
 
 .score-col {
-  width: 10%; /* 从15%减少到10% */
+  width: 10%;
   font-weight: bold;
   justify-content: flex-end;
   padding-right: 8px;
-  padding-left: 0; /* 减少左边距 */
+  padding-left: 0;
   white-space: nowrap;
   text-align: right;
 }
 
 .role-col {
-  width: 24%; /* 从22%增加到24%，给其他数据更多空间 */
+  width: 24%;
   flex-direction: column;
 }
 
@@ -251,42 +238,17 @@ export default {
   text-align: right;
   font-size: 0.9em;
   padding-right: 8px;
-  min-width: 30px; /* 确保每列有最小宽度 */
+  min-width: 30px;
 }
 
-/* 表头也右对齐以匹配数据 */
 .table-header .role-stats span {
   text-align: right;
   padding-right: 8px;
 }
 
-/* 让数字使用等宽字体，确保对齐 */
 .role-stats span, .score-col {
   font-family: 'Courier New', monospace;
-  letter-spacing: -0.5px; /* 微调字符间距 */
-}
-
-/* 确保数字单元格有足够的宽度显示内容不换行 */
-.score-col {
-  white-space: nowrap;
-  text-align: right;
-  justify-content: flex-end; /* 改为右对齐 */
-  padding-right: 8px;
-}
-
-/* 总分也右对齐，使用等宽字体 */
-.player-col {
-  width: 20%;
-  font-weight: bold;
-  padding-left: 10px;
-}
-
-/* 让表格总宽度有些富余，避免挤压 */
-.players-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-  overflow-x: auto;
+  letter-spacing: -0.5px;
 }
 
 .summary-actions {
@@ -296,32 +258,79 @@ export default {
   gap: 15px;
 }
 
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+  align-items: center;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.stat-values {
+  display: flex;
+  gap: 15px;
+  text-align: right;
+}
+
+.stat-values span {
+  min-width: 80px;
+  text-align: right;
+}
+
+.card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.card h3 {
+  margin-top: 0;
+  color: var(--primary-color);
+  font-size: 16px;
+  border-bottom: 1px solid #e3f2fd;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.action-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  flex: 1;
+  transition: all 0.2s;
+}
+
 .return-btn {
-  background-color: var(--primary-color);
+  background-color: #757575;
+  color: white;
 }
 
 .end-game-btn {
   background-color: var(--error-color);
+  color: white;
 }
 
-/* 响应式调整 */
 @media (max-width: 600px) {
   .modal-container {
     padding: 15px;
   }
   
   .player-col {
-    width: 15%; /* 进一步缩小 */
+    width: 15%;
     padding-left: 5px;
   }
   
   .score-col {
     width: 12%;
     padding-right: 5px;
-  }
-  
-  .role-col {
-    width: 24%;
   }
   
   .role-stats span {
@@ -353,41 +362,18 @@ export default {
   }
   
   .role-col {
-    width: 25%; /* 补偿剩余空间 */
+    width: 25%;
   }
   
   .role-stats span {
-    padding-right: 2px; /* 在小屏幕上减小右边距 */
-    letter-spacing: -0.8px; /* 在小屏幕上进一步减小间距 */
-    font-size: 0.75em; /* 在小屏幕上稍微减小字体 */
+    padding-right: 2px;
+    letter-spacing: -0.8px;
+    font-size: 0.75em;
   }
   
   .score-col {
     padding-right: 2px;
     letter-spacing: -0.8px;
   }
-}
-
-.stat-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 10px;
-  border-bottom: 1px solid #eee;
-  align-items: center;
-}
-
-.stat-item:last-child {
-  border-bottom: none;
-}
-
-.stat-values {
-  display: flex;
-  gap: 15px;
-  text-align: right;
-}
-
-.stat-values span {
-  min-width: 80px;
-  text-align: right;
 }
 </style>

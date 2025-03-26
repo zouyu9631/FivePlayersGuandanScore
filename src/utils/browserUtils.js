@@ -1,16 +1,9 @@
 import { safeExecute, logError } from './errorUtils';
 
-/**
- * 浏览器兼容性和触摸事件优化工具
- */
-
-// 应用浏览器兼容性修复
 export function applyBrowserCompatibility() {
-  // 处理iOS设备上的触摸反馈问题
   if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
     document.documentElement.style.webkitTapHighlightColor = 'transparent';
     
-    // 修复iOS设备上的视口高度问题
     const fixViewportHeight = () => {
       safeExecute(() => {
         document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
@@ -22,7 +15,6 @@ export function applyBrowserCompatibility() {
     fixViewportHeight();
   }
   
-  // 处理高对比度模式
   safeExecute(() => {
     if (window.matchMedia && window.matchMedia('(forced-colors: active)').matches) {
       document.body.classList.add('high-contrast-mode');
@@ -30,9 +22,7 @@ export function applyBrowserCompatibility() {
   }, [], null, '高对比度模式检测');
 }
 
-// 设置触摸事件优化
 export function setupTouchEvents() {
-  // 防止iOS长按菜单
   document.addEventListener('touchstart', function(e) {
     const target = e.target;
     if (
@@ -44,10 +34,8 @@ export function setupTouchEvents() {
     }
   }, { passive: false });
   
-  // 优化拖拽相关事件
   document.addEventListener('dragover', e => e.preventDefault(), false);
   
-  // 处理拖拽中的布局问题
   document.addEventListener('dragstart', () => {
     document.body.classList.add('dragging-active');
   });
@@ -57,13 +45,11 @@ export function setupTouchEvents() {
     cleanupGhostElements();
   });
   
-  // 拖拽结束后清理
   document.addEventListener('drop', e => {
     e.preventDefault();
     cleanupGhostElements();
   }, false);
   
-  // 防止触摸拖拽时页面滚动
   document.addEventListener('touchmove', e => {
     if (document.querySelector('.sortable-drag')) {
       e.preventDefault();
@@ -71,7 +57,6 @@ export function setupTouchEvents() {
   }, { passive: false });
 }
 
-// 辅助函数：清理拖拽产生的ghost元素
 function cleanupGhostElements() {
   safeExecute(() => {
     setTimeout(() => {

@@ -1,16 +1,14 @@
 <template>
   <div class="container">
-    <!-- 修改这里，添加header-container -->
     <div class="header-container">
       <h1>五人掼蛋记分器</h1>
       
-      <!-- 添加问号图标按钮 -->
       <button class="rules-button" @click="showRules = true" title="游戏规则">
         <span class="rules-icon">?</span>
       </button>
     </div>
     
-    <div class="card">
+    <div class="setup-card">
       <h2>输入五位玩家的名字</h2>
       <div class="players-container">
         <div v-for="(player, index) in players" :key="index" class="player-input">
@@ -30,7 +28,6 @@
       </div>
     </div>
     
-    <!-- 添加规则模态框 -->
     <RulesModal v-if="showRules" @close="showRules = false" />
   </div>
 </template>
@@ -45,7 +42,9 @@ export default {
   components: {
     RulesModal
   },
+  
   emits: ['start-game'],
+  
   setup(props, { emit }) {
     const defaultNames = DEFAULT_PLAYER_NAMES;
     const showRules = ref(false);
@@ -57,18 +56,17 @@ export default {
       { name: '', score: 0 },
       { name: '', score: 0 }
     ]);
-
+    
     const isDefaultName = (index) => {
       return !players.value[index].name || players.value[index].name === defaultNames[index];
     };
-
+    
     const onFocus = (index) => {
-      // 当用户点击输入框时，确保内容为空，方便输入
       if (players.value[index].name === defaultNames[index]) {
         players.value[index].name = '';
       }
     };
-
+    
     const validateName = (index) => {
       const existingNames = players.value
         .filter((_, i) => i !== index)
@@ -82,13 +80,12 @@ export default {
       
       players.value[index].name = result.processedName;
     };
-
+    
     const startGame = () => {
-      // 验证所有名字
       players.value.forEach((_, index) => validateName(index));
       emit('start-game', players.value);
     };
-
+    
     return {
       players,
       defaultNames,
@@ -108,13 +105,42 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-bottom: 10px;
+  padding: 20px;
+  background-color: #f5f7fa;
 }
 
-.card {
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.header-container h1 {
+  margin: 0;
+  color: var(--primary-color);
+  font-size: 24px;
+}
+
+.setup-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 20px;
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+.setup-card h2 {
+  margin-top: 0;
+  color: var(--primary-color);
+  font-size: 18px;
+  border-bottom: 1px solid #e3f2fd;
+  padding-bottom: 8px;
+  margin-bottom: 15px;
 }
 
 .players-container {
@@ -131,24 +157,43 @@ export default {
 
 .player-input input {
   flex: 1;
+  padding: 12px 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
   width: 100%;
-  color: #000; /* 自定义输入的名字为黑色 */
+  color: #000;
+}
+
+.player-input input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.2);
+  outline: none;
 }
 
 .actions {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 30px;
   margin-bottom: 10px;
 }
 
 .primary-btn {
-  padding: 10px 20px;
+  padding: 12px 25px;
   font-size: 16px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
 }
 
 .default-name {
-  color: #999 !important; /* 使用灰色表示默认名称 */
+  color: #999 !important;
 }
 
 .credits {
@@ -160,58 +205,34 @@ export default {
   padding: 10px 0;
 }
 
-/* 添加标题容器样式 */
-.header-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  margin-bottom: 20px;
-}
-
-.header-container h1 {
-  margin: 0;
-}
-
-/* 修改问号按钮样式，确保在所有设备上都保持圆形 */
 .rules-button {
-  position: relative; /* 改为相对定位 */
-  top: 0;
-  right: 0;
+  position: relative;
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: rgba(var(--primary-color), 0.05);
+  background-color: rgba(var(--primary-color-rgb), 0.05);
   color: var(--primary-color);
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  border: 1.5px solid rgba(var(--primary-color), 0.5);
+  border: 1.5px solid rgba(var(--primary-color-rgb), 0.5);
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   transition: all 0.2s ease;
   padding: 0;
-  box-sizing: border-box; /* 确保边框不会改变尺寸 */
-  min-width: 36px; /* 添加最小宽度 */
-  min-height: 36px; /* 添加最小高度 */
-  max-width: 36px; /* 添加最大宽度 */
-  max-height: 36px; /* 添加最大高度 */
-  overflow: hidden; /* 防止内容溢出 */
-  -webkit-border-radius: 50%; /* 兼容老旧浏览器 */
-  -moz-border-radius: 50%; /* 兼容老旧浏览器 */
-}
-
-.rules-button:hover {
-  background-color: rgba(var(--primary-color), 0.2);
-  color: var(--primary-color);
-  transform: scale(1.05);
+  box-sizing: border-box;
+  min-width: 36px;
+  min-height: 36px;
+  max-width: 36px;
+  max-height: 36px;
+  overflow: hidden;
 }
 
 .rules-icon {
   font-size: 20px;
   font-weight: normal;
-  line-height: 1; /* 确保文本垂直居中 */
-  text-align: center; /* 确保文本水平居中 */
+  line-height: 1;
+  text-align: center;
   width: 100%;
   height: 100%;
   display: flex;
@@ -220,18 +241,38 @@ export default {
 }
 
 @media (max-width: 480px) {
+  .container {
+    padding: 15px;
+  }
+  
+  .header-container h1 {
+    font-size: 20px;
+  }
+  
   .rules-button {
-    /* 删除top和right属性 */
     width: 32px;
     height: 32px;
-    min-width: 32px; /* 保持一致的最小宽度 */
-    min-height: 32px; /* 保持一致的最小高度 */
-    max-width: 32px; /* 保持一致的最大宽度 */
-    max-height: 32px; /* 保持一致的最大高度 */
+    min-width: 32px;
+    min-height: 32px;
+    max-width: 32px;
+    max-height: 32px;
   }
   
   .rules-icon {
     font-size: 18px;
+  }
+  
+  .setup-card {
+    padding: 15px;
+  }
+  
+  .player-input input {
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+  
+  .primary-btn {
+    padding: 10px 20px;
   }
 }
 </style>

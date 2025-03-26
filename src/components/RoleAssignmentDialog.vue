@@ -51,18 +51,15 @@ export default {
   setup(props, { emit }) {
     const isEmperor = computed(() => props.player === props.currentEmperor);
     const isGuard = computed(() => props.player === props.currentGuard);
-    const hasRole = computed(() => isEmperor.value || isGuard.value);
     
-    // 处理移除或关闭
     const handleRemoveOrClose = () => {
-      if (hasRole.value) {
+      if (isEmperor.value || isGuard.value) {
         emit('remove', props.player);
       } else {
         emit('close');
       }
     };
     
-    // 计算对话框位置
     const dialogStyle = ref({});
     
     onMounted(() => {
@@ -72,9 +69,8 @@ export default {
     return {
       isEmperor,
       isGuard,
-      hasRole,
-      dialogStyle,
       handleRemoveOrClose,
+      dialogStyle,
       ROLE_ICONS
     };
   }
@@ -88,7 +84,6 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
   background-color: var(--modal-overlay);
   z-index: 1000;
   display: flex;
@@ -122,14 +117,16 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 55px;  /* 从60px减小到55px */
-  height: 55px; /* 从60px减小到55px */
+  width: 55px;
+  height: 55px;
   border-radius: 50%;
   padding: 0;
-  transition: all 0.2s ease; /* 简化transition属性 */
+  transition: all 0.2s ease;
   background-color: #f5f5f5;
   border: none;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
 }
 
 .role-btn:active {
@@ -137,59 +134,50 @@ export default {
 }
 
 .role-icon {
-  font-size: 22px; /* 从24px减小到22px */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  text-align: center;
+  width: auto;
+  height: auto;
+  line-height: 1;
 }
 
-/* 皇帝按钮 - 使用与排序界面相同的底色 */
 .emperor-btn {
-  background-color: var(--emperor-color);
-  border-color: var(--emperor-color);
+  background-color: rgba(255, 193, 7, 0.1);
+  color: var(--emperor-color);
 }
 
 .emperor-btn.active {
-  background-color: var(--emperor-active);
-  border-color: var(--emperor-active);
+  background-color: rgba(255, 193, 7, 0.3);
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
 }
 
-/* 侍卫按钮 - 使用与排序界面相同的底色 */
 .guard-btn {
-  background-color: var(--guard-color);
-  border-color: var(--guard-color);
+  background-color: rgba(33, 150, 243, 0.1);
+  color: var(--guard-color);
 }
 
 .guard-btn.active {
-  background-color: var(--guard-active);
-  border-color: var(--guard-active);
+  background-color: rgba(33, 150, 243, 0.3);
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
 }
 
-/* 移除按钮 */
 .remove-role-btn {
-  background-color: #ffebee;
-  border-color: #ffcdd2;
-}
-
-.remove-role-btn:hover {
-  background-color: #ffcdd2;
+  background-color: rgba(244, 67, 54, 0.1);
+  color: var(--error-color);
 }
 
 @media (max-width: 340px) {
   .role-btn {
-    width: 45px;  /* 从50px减小到45px */
-    height: 45px; /* 从50px减小到45px */
+    width: 45px;
+    height: 45px;
   }
   
   .role-icon {
-    font-size: 20px; /* 减小图标尺寸 */
+    font-size: 20px;
   }
-}
-
-/* 合并重复的样式规则 */
-.emperor-btn, .guard-btn, .remove-role-btn {
-  border: 1px solid transparent;
-}
-
-.emperor-btn.active, .guard-btn.active {
-  border-width: 2px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 </style>

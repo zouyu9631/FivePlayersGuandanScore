@@ -50,34 +50,25 @@ export default {
     const visible = ref(false);
     const selectedCard = ref(props.modelValue);
     const showHint = ref(true);
-    
-    // 使用导入的卡牌常量，而不是本地定义
-    const cardSuits = CARD_SUITS;
-    const cardValues = CARD_VALUES;
 
-    // 检查本地存储是否已展示过提示
     onMounted(() => {
       if (getItem(STORAGE_KEYS.CARD_SELECTOR_HINT, false)) {
         showHint.value = false;
       }
     });
 
-    // 监听modelValue变化同步内部状态
     watch(() => props.modelValue, (newValue) => {
       selectedCard.value = newValue;
     });
     
-    // 打开/关闭选择器
     const openSelector = () => { visible.value = true; };
     const closeSelector = () => { visible.value = false; };
 
-    // 隐藏提示
     const dismissHint = () => {
       showHint.value = false;
       setItem(STORAGE_KEYS.CARD_SELECTOR_HINT, 'true');
     };
 
-    // 处理牌选择
     const handleCardSelect = (suit, value) => {
       let card = suit === 'joker' ? '🃏' : getCardDisplay(suit, value);
       
@@ -92,8 +83,8 @@ export default {
       visible,
       selectedCard,
       showHint,
-      cardSuits,
-      cardValues,
+      cardSuits: CARD_SUITS,
+      cardValues: CARD_VALUES,
       getCardDisplay,
       isRedCard,
       openSelector,
@@ -121,22 +112,11 @@ export default {
 
 .card-selector {
   background: white;
-  border-radius: 8px;
-  padding: 20px 10px;
-  width: 90%;
-  max-width: 360px;
-  max-height: 85%;
-  overflow-y: auto;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-}
-
-.card-selector h3 {
-  margin-top: 0;
-  margin-bottom: 12px;
-  text-align: center;
-  font-size: 18px;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
 }
 
 .card-grid {
@@ -162,28 +142,13 @@ export default {
   -webkit-tap-highlight-color: transparent;
   outline: none;
   user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
   position: relative;
-}
-
-.card-option:hover {
-  background: #f0f0f0;
-  transform: scale(1.05);
 }
 
 .card-option:active {
   outline: none;
   background-color: #f0f0f0;
   transform: none;
-}
-
-.card-option:focus {
-  outline: none;
-}
-
-.red-card {
-  color: var(--red-card-color);
 }
 
 .card-display {
@@ -198,7 +163,6 @@ export default {
   position: relative;
   -webkit-tap-highlight-color: transparent;
   min-height: 60px;
-  border-left: 4px solid #ff9800; /* 橙色左边框 */
 }
 
 .round-label {
@@ -233,10 +197,9 @@ export default {
   margin: 0 6px;
 }
 
-/* 调整小王牌的大小 */
 .joker-card {
-  font-size: 42px; /* 进一步增大小王的大小 */
-  transform: translateY(-3px); /* 微调上移补偿更大的字体 */
+  font-size: 42px;
+  transform: translateY(-3px);
 }
 
 .card-hint {
@@ -269,7 +232,6 @@ export default {
     touch-action: auto;
   }
   
-  /* 点击反馈效果 */
   .card-option::after {
     content: '';
     position: absolute;
@@ -288,26 +250,12 @@ export default {
     opacity: 1;
   }
   
-  .round-info {
-    font-size: 16px; /* 增加移动端字体大小从14px到16px */
-    left: 12px;
-  }
-  
-  .card-selection {
-    padding-left: 25px;
-  }
-  
   .selected-card {
-    font-size: 30px; /* 移动端进一步减小字体 */
+    font-size: 30px;
   }
   
   .joker-card {
-    font-size: 38px; /* 移动端也增大小王的大小 */
-  }
-  
-  .card-hint {
-    font-size: 12px;
-    bottom: 2px;
+    font-size: 38px;
   }
   
   .card-display {
@@ -315,23 +263,11 @@ export default {
     min-height: 55px;
   }
   
-  .round-label {
+  .round-label, .called-card-label {
     font-size: 16px;
-    padding: 3px 8px;
-  }
-  
-  .called-card-label {
-    font-size: 14px;
-  }
-  
-  .joker {
-    font-size: 26px;
-    padding: 8px 4px;
-    min-height: 44px;
   }
 }
 
-/* 针对高度较小的屏幕进行优化 */
 @media (max-height: 700px) {
   .card-option {
     padding: 6px 3px;
@@ -342,12 +278,8 @@ export default {
     font-size: 24px;
   }
   
-  .card-suit-group {
+  .card-suit-group, .card-grid {
     gap: 4px;
-  }
-  
-  .card-grid {
-    gap: 3px;
   }
 }
 </style>

@@ -2,7 +2,6 @@ import { computed } from 'vue';
 import { formatScore, getScoreClass } from '../utils/gameUtils';
 
 export function useGameStats(players, gameHistory) {
-  // 皇帝队胜率
   const emperorTeamWinRate = computed(() => {
     if (gameHistory.value.length === 0) return 0;
     
@@ -14,7 +13,6 @@ export function useGameStats(players, gameHistory) {
     return Math.round((winCount / gameHistory.value.length) * 100);
   });
 
-  // 皇帝方平均得分
   const emperorAvgScore = computed(() => {
     if (gameHistory.value.length === 0) return 0;
     
@@ -35,7 +33,6 @@ export function useGameStats(players, gameHistory) {
     return count > 0 ? parseFloat((totalScore / count).toFixed(2)) : 0;
   });
 
-  // 平民方平均得分
   const farmerAvgScore = computed(() => {
     if (gameHistory.value.length === 0) return 0;
     
@@ -56,21 +53,19 @@ export function useGameStats(players, gameHistory) {
     return count > 0 ? parseFloat((totalScore / count).toFixed(2)) : 0;
   });
 
-  // 获取玩家担任特定角色的次数
   const getPlayerRoleCount = (playerName, role) => {
     return gameHistory.value.filter(round => {
       if (role === 'emperor') return round.emperor === playerName;
       if (role === 'guard') return round.guard === playerName && round.emperor !== playerName;
-      return playerName !== round.emperor && playerName !== round.guard; // farmer
+      return playerName !== round.emperor && playerName !== round.guard;
     }).length;
   };
 
-  // 获取玩家担任特定角色的胜率
   const getPlayerRoleWinRate = (playerName, role) => {
     const games = gameHistory.value.filter(round => {
       if (role === 'emperor') return round.emperor === playerName;
       if (role === 'guard') return round.guard === playerName && round.emperor !== playerName;
-      return playerName !== round.emperor && playerName !== round.guard; // farmer
+      return playerName !== round.emperor && playerName !== round.guard;
     });
     
     if (games.length === 0) return 0;
@@ -83,7 +78,6 @@ export function useGameStats(players, gameHistory) {
     return Math.round((wins / games.length) * 100);
   };
 
-  // 获取玩家担任特定角色的总得分
   const getPlayerRoleTotalScore = (playerName, role) => {
     return gameHistory.value.reduce((total, round) => {
       const isEmperor = round.emperor === playerName;

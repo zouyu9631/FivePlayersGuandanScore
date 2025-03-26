@@ -1,12 +1,12 @@
 <template>
-  <div class="rules-modal" @click.self="$emit('close')">
-    <div class="rules-container">
-      <div class="rules-header">
-        <h2>五人掼蛋规则说明</h2>
-        <button class="close-button" @click="$emit('close')">×</button>
+  <div class="modal-overlay" @click="$emit('close')">
+    <div class="modal-container" @click.stop>
+      <div class="modal-header">
+        <h3>五人掼蛋游戏规则</h3>
+        <button class="close-btn" @click="$emit('close')">✕</button>
       </div>
       
-      <div class="rules-content">
+      <div class="modal-content">
         <section class="rule-section">
           <h3>基本设置</h3>
           <ul>
@@ -140,6 +140,10 @@
           感谢许公子，让掼蛋多了一份精彩
         </div>
       </div>
+      
+      <div class="modal-footer">
+        <button class="confirm-btn" @click="$emit('close')">我知道了</button>
+      </div>
     </div>
   </div>
 </template>
@@ -152,63 +156,85 @@ export default {
 </script>
 
 <style scoped>
-.rules-modal {
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--modal-overlay);
-  z-index: 2000;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
   padding: 20px;
-  overflow-y: auto;
+  backdrop-filter: blur(2px);
 }
 
-.rules-container {
+.modal-container {
   background-color: white;
-  border-radius: 10px;
-  width: 100%;
+  border-radius: 12px;
+  width: 90%;
   max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  max-height: 85vh;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
-.rules-header {
-  padding: 15px 20px;
+.modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--border-color);
-  position: sticky;
-  top: 0;
-  background: white;
-  z-index: 10;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  background-color: #fcfcfc;
 }
 
-.rules-header h2 {
+.modal-header h3 {
   margin: 0;
-  color: var(--text-color);
+  color: var(--primary-color);
+  font-size: 18px;
+  font-weight: 600;
 }
 
-.close-button {
+.close-btn {
   background: none;
   border: none;
-  font-size: 24px;
-  color: #666;
+  color: #888;
+  font-size: 20px;
   cursor: pointer;
-  padding: 0 10px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
 }
 
-.rules-content {
+.modal-content {
   flex: 1;
-  padding: 20px;
   overflow-y: auto;
+  padding: 20px;
+}
+
+.modal-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.confirm-btn {
+  padding: 8px 20px;
+  background-color: var(--primary-color); 
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
 }
 
 .rule-section {
@@ -274,8 +300,8 @@ export default {
 }
 
 .special-note {
-  background-color: var(--emperor-color);
-  border-left: 4px solid var(--warning-color);
+  background-color: #f0f7ff;
+  border-left: 4px solid #1e88e5;
   padding: 10px 15px;
   margin: 15px 0;
   border-radius: 4px;
@@ -331,8 +357,20 @@ export default {
 }
 
 @media (max-width: 480px) {
-  .rules-container {
-    max-height: 95vh;
+  .modal-container {
+    width: 95%;
+  }
+  
+  .modal-header h3 {
+    font-size: 16px;
+  }
+  
+  .modal-content {
+    padding: 15px;
+  }
+  
+  .modal-footer {
+    padding: 12px 15px;
   }
   
   .identity-box {
@@ -345,10 +383,6 @@ export default {
   
   .score-table th, .score-table td {
     padding: 6px 4px;
-  }
-  
-  .rules-content {
-    padding: 15px;
   }
 }
 </style>

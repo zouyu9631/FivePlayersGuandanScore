@@ -1,16 +1,13 @@
 <template>
   <div class="container">
-    <!-- 游戏头部信息 -->
     <GameHeader 
       :players="players" 
       :showHistory="showHistory"
       @toggle-history="toggleHistory"
     />
 
-    <!-- 叫牌区域 -->
     <CardSelector v-model="calledCard" :currentRound="currentRound" />
 
-    <!-- 排名区域 -->
     <PlayerRanking 
       v-model="playerRanking" 
       :emperor="emperor" 
@@ -18,7 +15,6 @@
       @select-player="handlePlayerSelect"
     />
 
-    <!-- 历史记录抽屉 -->
     <transition name="drawer">
       <div v-if="showHistory" class="history-drawer-container" @click.self="toggleHistory">
         <div class="history-drawer">
@@ -31,20 +27,18 @@
       </div>
     </transition>
 
-    <!-- 浮动操作按钮 -->
     <div class="floating-btns-container">
       <button class="floating-action-btn summary-btn" @click="handleEndGame">
-        <span class="summary-icon">📊</span>
-        <span class="summary-text">结算总分</span>
+        <span class="action-icon">📊</span>
+        <span class="action-text">结算总分</span>
       </button>
       
       <button class="floating-action-btn calculate-btn" @click="handleCalculateScore">
-        <span class="calculate-icon">💰</span>
-        <span class="calculate-text">计算本局得分</span>
+        <span class="action-icon">💰</span>
+        <span class="action-text">计算本局</span>
       </button>
     </div>
 
-    <!-- 弹窗组件 -->
     <RoleAssignmentDialog
       v-if="showRoleSelection"
       :player="selectedPlayer"
@@ -56,7 +50,6 @@
       @remove="removeRoles"
     />
     
-    <!-- 确认对话框 -->
     <ConfirmationDialog
       v-if="showConfirmation"
       :calledCard="calledCard"
@@ -64,18 +57,17 @@
       :emperor="emperor"
       :guard="guard"
       :scoreChanges="scoreChanges"
+      :currentRound="currentRound"
       @confirm="confirmScore"
       @cancel="showConfirmation = false"
     />
     
-    <!-- 错误提示弹窗 -->
     <ErrorModal 
       v-if="showError" 
       :message="errorMessage" 
       @close="showError = false"
     />
     
-    <!-- 游戏结算弹窗 -->
     <GameSummaryModal
       v-if="showGameSummary"
       :players="players"
@@ -119,7 +111,6 @@ export default {
   emits: ['update-history', 'end-game'],
   
   setup(props, { emit }) {
-    // 游戏逻辑状态
     const {
       playerRanking,
       emperor,
@@ -130,7 +121,6 @@ export default {
       resetRound
     } = useGameLogic(props);
 
-    // UI状态
     const showConfirmation = ref(false);
     const showHistory = ref(false);
     const showRoleSelection = ref(false);
@@ -140,12 +130,10 @@ export default {
     const errorMessage = ref('');
     const dialogPosition = ref({ x: 0, y: 0 });
 
-    // 监听props变化
     watch(() => props.players, (newVal) => {
       playerRanking.value = [...newVal];
     }, { deep: true });
 
-    // 方法
     const toggleHistory = () => showHistory.value = !showHistory.value;
     
     const handleEndGame = () => showGameSummary.value = true;
@@ -178,14 +166,11 @@ export default {
     };
 
     const confirmScore = () => {
-      // 更新玩家总分
       props.players.forEach(player => {
-        // 确保分数是数值类型
         const scoreChange = Number(scoreChanges[player.name] || 0);
         player.score = Number(player.score || 0) + scoreChange;
       });
       
-      // 记录本轮数据
       const roundData = {
         emperor: emperor.value,
         guard: guard.value || '',
@@ -194,10 +179,8 @@ export default {
         scoreChanges: {...scoreChanges}
       };
       
-      // 发送更新
       emit('update-history', roundData);
       
-      // 重置本局
       resetRound(props.players);
       showConfirmation.value = false;
     };
@@ -220,7 +203,7 @@ export default {
       showRoleSelection.value = false;
     };
 
-    return {
+    return { 
       playerRanking,
       emperor,
       guard,
@@ -249,13 +232,6 @@ export default {
 </script>
 
 <style scoped>
-.action-buttons {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
-}
-
-/* 浮动按钮容器 */
 .floating-btns-container {
   position: fixed;
   bottom: 20px;
@@ -269,27 +245,26 @@ export default {
 
 .floating-action-btn {
   color: white;
-  border-radius: 30px;
+  border-radius: 20px;
   padding: 12px 20px;
   display: flex;
   align-items: center;
   border: none;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bold;
   transition: all 0.3s;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   max-width: 48%;
 }
 
-.calculate-btn {
-  background-color: var(--success-color);
-  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+.action-icon {
+  font-size: 18px;
+  margin-right: 5px;
 }
 
-.calculate-btn:hover {
-  background-color: var(--success-color-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(76, 175, 80, 0.4);
+.calculate-btn {
+  background-color: var(--primary-color);
+  box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
 }
 
 .summary-btn {
@@ -297,13 +272,6 @@ export default {
   box-shadow: 0 4px 10px rgba(244, 67, 54, 0.3);
 }
 
-.summary-btn:hover {
-  background-color: var(--error-color-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(244, 67, 54, 0.4);
-}
-
-/* 移动端适配 */
 @media (max-width: 768px) {
   .floating-action-btn {
     padding: 10px 16px;
@@ -315,13 +283,13 @@ export default {
     padding: 0 15px;
   }
   
-  .calculate-icon, .summary-icon {
-    font-size: 18px;
+  .action-icon {
+    font-size: 16px;
   }
 }
 
 @media (max-width: 480px) {
-  .calculate-text, .summary-text {
+  .action-text {
     font-size: 13px;
   }
   
@@ -335,33 +303,11 @@ export default {
 }
 
 .container {
-  padding-bottom: 140px; /* 为两个浮动按钮留出空间 */
-  overflow-x: hidden; /* 防止水平滚动条出现 */
+  padding-bottom: 140px;
+  overflow-x: hidden;
   position: relative;
 }
 
-/* 历史记录过渡动画 - 优化动画效果和解决"弹跳"问题 */
-.slide-enter-active,
-.slide-leave-active {
-  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              opacity 0.25s ease,
-              margin-bottom 0.25s ease;
-  max-height: 300px;
-  overflow: hidden;
-  margin-bottom: 20px;
-  will-change: max-height, opacity, margin-bottom;
-  transform: translate3d(0, 0, 0); /* 促进硬件加速 */
-}
-
-/* 移除未使用的动画类 */
-.slide-enter-from,
-.slide-leave-to {
-  max-height: 0;
-  opacity: 0;
-  margin-bottom: 0;
-}
-
-/* 完全重新设计历史记录抽屉 */
 .history-drawer-container {
   position: fixed;
   top: 0;
@@ -374,7 +320,7 @@ export default {
   justify-content: center;
   align-items: center;
   padding: 20px;
-  backdrop-filter: blur(2px); /* 轻微模糊背景 */
+  backdrop-filter: blur(2px);
 }
 
 .history-drawer {
@@ -419,12 +365,6 @@ export default {
   border-radius: 50%;
 }
 
-.close-drawer-btn:hover {
-  background-color: #f5f5f5;
-  color: #333;
-}
-
-/* 抽屉动画 */
 .drawer-enter-active,
 .drawer-leave-active {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -436,7 +376,6 @@ export default {
   transform: scale(0.9);
 }
 
-/* 移动端适配 */
 @media (max-width: 768px) {
   .history-drawer {
     width: 95%;

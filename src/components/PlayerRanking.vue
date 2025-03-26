@@ -72,7 +72,7 @@ export default {
       get: () => props.modelValue,
       set: (value) => emit('update:modelValue', value)
     });
-
+    
     onMounted(() => {
       const dragHandles = document.querySelectorAll('.drag-handle');
       
@@ -82,7 +82,7 @@ export default {
         }, { passive: false });
       });
     });
-
+    
     const handlePlayerClick = (event, playerName) => {
       const position = {
         x: event.clientX,
@@ -90,7 +90,7 @@ export default {
       };
       emit('select-player', playerName, position);
     };
-
+    
     return {
       internalValue,
       handlePlayerClick
@@ -106,14 +106,13 @@ export default {
   padding: 15px;
   margin: 15px 0 20px;
   box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-  border-left: 4px solid #4CAF50; /* 绿色左边框 */
 }
 
 .ranking-section h3 {
   margin-top: 0;
-  color: #2e7d32;
+  color: var(--primary-color);
   font-size: 18px;
-  border-bottom: 1px solid #e8f5e9;
+  border-bottom: 1px solid #e3f2fd;
   padding-bottom: 8px;
   margin-bottom: 15px;
 }
@@ -133,12 +132,6 @@ export default {
   height: 50px;
   box-sizing: border-box;
   overflow: hidden;
-}
-
-.player-rank:hover {
-  background: #f0f0f0;
-  transform: translateY(-2px);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .drag-handle {
@@ -191,11 +184,18 @@ export default {
   display: flex;
   gap: 10px;
   padding-right: 10px;
+  align-items: center;
+  height: 100%;
 }
 
 .role-indicator {
   font-size: 18px;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-width: 24px;
+  line-height: 1;
 }
 
 .emperor-indicator, .guard-indicator, .self-guard-indicator {
@@ -208,25 +208,15 @@ export default {
 }
 
 .emperor-player {
-  background: var(--emperor-color);
-  border-color: var(--emperor-active);
+  background-color: rgba(255, 193, 7, 0.1);
 }
 
 .guard-player {
-  background: var(--guard-color);
-  border-color: var(--guard-active);
+  background-color: rgba(33, 150, 243, 0.1);
 }
 
 .emperor-guard-player {
-  background: linear-gradient(135deg, var(--emperor-color) 0%, var(--guard-color) 100%);
-  border-color: var(--emperor-active);
-}
-
-.ghost {
-  opacity: 0.3 !important;
-  background-color: transparent !important;
-  border: 2px dashed #1976d2 !important;
-  box-shadow: none !important;
+  background-color: rgba(156, 39, 176, 0.1);
 }
 
 .ghost-placeholder {
@@ -266,6 +256,7 @@ export default {
   background-color: #f0f0f0 !important;
   z-index: 1;
   position: relative;
+  background-color: rgba(33, 150, 243, 0.08) !important;
 }
 
 .dragging {
@@ -310,7 +301,7 @@ export default {
     align-items: center;
     min-width: 44px;
   }
-
+  
   .drag-icon {
     font-size: 24px;
     padding: 5px;
@@ -320,7 +311,7 @@ export default {
     background-color: rgba(0,0,0,0.1);
     border-radius: 4px;
   }
-
+  
   .ghost-placeholder {
     height: 44px !important;
     min-height: 44px !important;
@@ -345,6 +336,10 @@ export default {
     opacity: 0.65;
     transition: opacity 0.1s;
   }
+  
+  .role-indicator {
+    font-size: 16px;
+  }
 }
 
 @media (forced-colors: active) {
@@ -356,7 +351,7 @@ export default {
   .emperor-player,
   .guard-player,
   .emperor-guard-player {
-    border: 2px solid currentColor;
+    border: 1px solid currentColor;
   }
   
   .role-indicator {

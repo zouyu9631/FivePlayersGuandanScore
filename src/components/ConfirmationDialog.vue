@@ -1,8 +1,7 @@
 <template>
-  <!-- 添加 @touchmove.prevent 到确认框外层，防止拖动屏幕滚动 -->
   <div class="confirmation-overlay" @click="$emit('cancel')" @touchmove.prevent>
     <div class="confirmation-dialog" @click.stop>
-      <h3>请确认游戏信息</h3>
+      <h3>请确认第 {{ currentRound }} 局游戏信息</h3>
       <div class="confirmation-content">
         <p>
           叫牌：
@@ -45,7 +44,11 @@ export default {
     playerRanking: Array,
     emperor: String,
     guard: String,
-    scoreChanges: Object
+    scoreChanges: Object,
+    currentRound: {
+      type: Number,
+      default: 1
+    }
   },
   emits: ['confirm', 'cancel'],
   setup(props) {
@@ -79,6 +82,15 @@ export default {
   box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
+.confirmation-dialog h3 {
+  margin-top: 0;
+  color: var(--primary-color);
+  font-size: 18px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #e3f2fd;
+  padding-bottom: 8px;
+}
+
 .confirmation-content {
   margin: 15px 0;
 }
@@ -101,12 +113,13 @@ export default {
 .confirmation-buttons {
   display: flex;
   justify-content: space-between;
-  gap: 20px; /* 新增：为按钮间增加空隙 */
+  gap: 20px;
   margin-top: 20px;
 }
 
 .confirm-btn {
-  background-color: var(--success-color);
+  background-color: var(--primary-color);
+  color: white;
 }
 
 .positive {
@@ -119,12 +132,14 @@ export default {
   font-weight: bold;
 }
 
-/* 移除零分样式，因为在游戏规则中不会出现零分情况 */
-
 .emperor-indicator,
 .guard-indicator,
 .self-guard-indicator {
   margin-left: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
 }
 
 .self-guard-indicator {
