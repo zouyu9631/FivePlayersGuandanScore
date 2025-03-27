@@ -26,8 +26,8 @@
         </div>
       </div>
       <div class="confirmation-buttons">
-        <button @click="$emit('cancel')">返回游戏</button>
-        <button @click="$emit('confirm')" class="confirm-btn">确认计算</button>
+        <button @click="$emit('cancel')" class="action-btn cancel-btn">返回游戏</button>
+        <button @click="$emit('confirm')" class="action-btn confirm-btn">确认计算</button>
       </div>
     </div>
   </div>
@@ -117,9 +117,39 @@ export default {
   margin-top: 20px;
 }
 
+.action-btn {
+  color: var(--text-color);
+  border-radius: 18px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s;
+  flex: 1;
+  background-color: white;
+}
+
+.cancel-btn {
+  border-color: #757575;
+  background-color: rgba(117, 117, 117, 0.08);
+  box-shadow: 0 2px 4px rgba(117, 117, 117, 0.15);
+}
+
 .confirm-btn {
-  background-color: var(--primary-color);
-  color: white;
+  border-color: var(--primary-color);
+  background-color: rgba(74, 123, 255, 0.08);
+  box-shadow: 0 2px 4px rgba(74, 123, 255, 0.15);
+}
+
+.confirm-btn:active {
+  background-color: rgba(74, 123, 255, 0.15);
+}
+
+.cancel-btn:active {
+  background-color: rgba(117, 117, 117, 0.15);
 }
 
 .positive {

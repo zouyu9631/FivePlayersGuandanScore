@@ -4,17 +4,13 @@
       :players="players"
       @show-rules="showRules = true"
     />
-
     <CardSelector v-model="calledCard" :currentRound="currentRound" />
-
     <PlayerRanking 
       v-model="playerRanking" 
       :emperor="emperor" 
       :guard="guard"
       @select-player="handlePlayerSelect"
     />
-
-    <!-- 规则弹窗 -->
     <RulesModal v-if="showRules" @close="showRules = false" />
 
     <transition name="drawer">
@@ -29,24 +25,21 @@
       </div>
     </transition>
 
-    <div class="floating-btns-container">
-      <div class="btn-column left-column">
-        <button class="floating-action-btn history-btn" @click="toggleHistory">
-          <span class="action-icon">📜</span>
-          <span class="action-text">历史记录</span>
-        </button>
-        <button class="floating-action-btn summary-btn" @click="handleEndGame">
-          <span class="action-icon">📊</span>
-          <span class="action-text">结算总分</span>
-        </button>
-      </div>
-      
-      <button class="floating-action-btn calculate-btn" @click="handleCalculateScore">
+    <div class="bottom-action-bar">
+      <button class="action-btn history-btn" @click="toggleHistory">
+        <span class="action-icon">📜</span>
+        <span class="action-text">历史记录</span>
+      </button>
+      <button class="action-btn calculate-btn" @click="handleCalculateScore">
         <span class="action-icon">💰</span>
         <span class="action-text">计算本局</span>
       </button>
+      <button class="action-btn summary-btn" @click="handleEndGame">
+        <span class="action-icon">📊</span>
+        <span class="action-text">结算总分</span>
+      </button>
     </div>
-
+    
     <RoleAssignmentDialog
       v-if="showRoleSelection"
       :player="selectedPlayer"
@@ -244,105 +237,111 @@ export default {
 </script>
 
 <style scoped>
-.floating-btns-container {
+.container {
+  padding-bottom: 80px;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.bottom-action-bar {
   position: fixed;
-  bottom: 20px;
+  bottom: 0;
   left: 0;
   right: 0;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding: 0 20px;
+  justify-content: space-around;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 -1px 6px rgba(0,0,0,0.08);
+  padding: 10px 0;
   z-index: 50;
+  border-top: 1px solid #eee;
+  backdrop-filter: blur(5px);
 }
 
-.floating-action-btn {
-  color: white;
-  border-radius: 20px;
-  padding: 12px 20px;
+.action-btn {
+  color: var(--text-color);
+  border-radius: 18px;
+  padding: 10px 16px;
   display: flex;
   align-items: center;
-  border: none;
-  font-size: 15px;
-  font-weight: bold;
+  justify-content: center;
+  border: 1px solid;
+  font-size: 14px;
+  font-weight: 600;
   transition: all 0.3s;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  flex: 1;
+  margin: 0 8px;
+  max-width: 140px;
+  background-color: white;
 }
 
 .calculate-btn {
-  background-color: var(--primary-color);
-  box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
-  max-width: 48%;
-  height: fit-content;
+  border-color: var(--primary-color);
+  background-color: rgba(74, 123, 255, 0.08);
+  box-shadow: 0 2px 4px rgba(74, 123, 255, 0.15);
 }
-
-.btn-column {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.calculate-btn .action-icon {
+  color: var(--primary-color);
 }
-
-.left-column {
-  max-width: 48%;
+.calculate-btn:active {
+  background-color: rgba(74, 123, 255, 0.15);
 }
 
 .summary-btn {
-  background-color: var(--error-color);
-  box-shadow: 0 4px 10px rgba(244, 67, 54, 0.3);
+  border-color: var(--error-color);
+  background-color: rgba(244, 67, 54, 0.08);
+  box-shadow: 0 2px 4px rgba(244, 67, 54, 0.15);
+}
+.summary-btn .action-icon {
+  color: var(--error-color);
+}
+.summary-btn:active {
+  background-color: rgba(244, 67, 54, 0.15);
 }
 
 .history-btn {
-  background-color: var(--warning-color);
-  box-shadow: 0 4px 10px rgba(255, 152, 0, 0.3);
+  border-color: var(--warning-color);
+  background-color: rgba(255, 152, 0, 0.08);
+  box-shadow: 0 2px 4px rgba(255, 152, 0, 0.15);
+}
+.history-btn .action-icon {
+  color: var(--warning-color);
+}
+.history-btn:active {
+  background-color: rgba(255, 152, 0, 0.15);
 }
 
 .action-icon {
-  font-size: 18px;
-  margin-right: 5px;
+  font-size: 16px;
+  margin-right: 8px;
 }
 
 @media (max-width: 768px) {
-  .floating-action-btn {
-    padding: 10px 16px;
-    font-size: 14px;
-  }
-  
-  .floating-btns-container {
-    bottom: 15px;
-    padding: 0 15px;
-  }
-  
-  .btn-column {
-    gap: 8px;
+  .action-btn {
+    padding: 8px 12px;
+    font-size: 13px;
   }
   
   .action-icon {
-    font-size: 16px;
+    font-size: 14px;
+    margin-right: 5px;
   }
 }
 
 @media (max-width: 480px) {
+  .action-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  
   .action-text {
-    font-size: 13px;
+    font-size: 12px;
   }
   
-  .floating-action-btn {
-    padding: 8px 14px;
+  .action-icon {
+    margin-right: 3px;
   }
-  
-  .floating-btns-container {
-    padding: 0 10px;
-  }
-  
-  .btn-column {
-    gap: 6px;
-  }
-}
-
-.container {
-  padding-bottom: 140px;
-  overflow-x: hidden;
-  position: relative;
 }
 
 .history-drawer-container {

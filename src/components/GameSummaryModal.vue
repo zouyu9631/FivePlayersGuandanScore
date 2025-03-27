@@ -549,23 +549,38 @@ export default {
 }
 
 .action-btn {
-  padding: 10px 20px;
-  border-radius: 20px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  flex: 1;
+  color: var(--text-color);
+  border-radius: 18px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid;
   font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s;
+  flex: 1;
+  background-color: white;
 }
 
 .return-btn {
-  background-color: #757575;
-  color: white;
+  border-color: #757575;
+  background-color: rgba(117, 117, 117, 0.08);
+  box-shadow: 0 2px 4px rgba(117, 117, 117, 0.15);
+}
+
+.return-btn:active {
+  background-color: rgba(117, 117, 117, 0.15);
 }
 
 .end-game-btn {
-  background-color: var(--error-color);
-  color: white;
+  border-color: var(--error-color);
+  background-color: rgba(244, 67, 54, 0.08);
+  box-shadow: 0 2px 4px rgba(244, 67, 54, 0.15);
+}
+
+.end-game-btn:active {
+  background-color: rgba(244, 67, 54, 0.15);
 }
 
 .card {
