@@ -16,9 +16,9 @@
             <tr class="role-row">
               <td class="round-cell">{{ i + 1 }}</td>
               <td v-for="player in sortedPlayerNames" :key="`${i}-${player}-role`" class="role-cell">
-                <span v-if="player === round.emperor && player !== round.guard" class="role-icon emperor-icon" title="皇帝">{{ ROLE_ICONS.EMPEROR }}</span>
-                <span v-else-if="player === round.guard && player !== round.emperor" class="role-icon guard-icon" title="侍卫">{{ ROLE_ICONS.GUARD }}</span>
-                <span v-else-if="player === round.emperor && player === round.guard" class="role-icon self-guard-icon" title="皇帝自保">{{ ROLE_ICONS.SELF_GUARD }}</span>
+                <span v-if="player === round.emperor && player !== round.guard" class="role-icon emperor-icon">{{ ROLE_ICONS.EMPEROR }}</span>
+                <span v-else-if="player === round.guard && player !== round.emperor" class="role-icon guard-icon">{{ ROLE_ICONS.GUARD }}</span>
+                <span v-else-if="player === round.emperor && player === round.guard" class="role-icon self-guard-icon">{{ ROLE_ICONS.SELF_GUARD }}</span>
                 <span v-else class="role-placeholder">&nbsp;</span>
               </td>
             </tr>
@@ -262,10 +262,6 @@ export default {
 
 .role-row {
   background-color: white;
-}
-
-.role-row:hover, .score-row:hover {
-  background-color: #f5f5f5;
 }
 
 @media (max-width: 480px) {

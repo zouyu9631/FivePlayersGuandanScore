@@ -17,7 +17,6 @@
       :scroll="true"
       :scroll-sensitivity="30"
       drag-class="dragging"
-      :disabled="false"
     >
       <template #item="{element, index}">
         <div class="player-rank" 
@@ -26,15 +25,15 @@
                'guard-player': element.name === guard && emperor !== guard,
                'emperor-guard-player': element.name === emperor && element.name === guard
              }">
-          <div class="drag-handle" title="拖动调整顺序">
+          <div class="drag-handle">
             <span class="drag-icon">≡</span>
           </div>
           <span class="rank-number">{{ index + 1 }}. </span>
           <span class="player-name" @click="handlePlayerClick($event, element.name)">{{ element.name }}</span>
           <div class="role-indicators">
-            <span v-if="element.name === emperor && element.name !== guard" class="role-indicator emperor-indicator" title="皇帝">👑</span>
-            <span v-if="element.name === guard && element.name !== emperor" class="role-indicator guard-indicator" title="侍卫">🛡️</span>
-            <span v-if="element.name === emperor && element.name === guard" class="role-indicator self-guard-indicator" title="皇帝自保">👑🛡️</span>
+            <span v-if="element.name === emperor && element.name !== guard" class="role-indicator emperor-indicator">👑</span>
+            <span v-if="element.name === guard && element.name !== emperor" class="role-indicator guard-indicator">🛡️</span>
+            <span v-if="element.name === emperor && element.name === guard" class="role-indicator self-guard-indicator">👑🛡️</span>
           </div>
         </div>
       </template>
@@ -42,7 +41,10 @@
     
     <div v-if="showRankingTip" class="ranking-tip">
       <span class="tip-icon">💡</span>
-      <span class="tip-text">拖动 ≡ 图标可调整名次，点击名字可选择身份</span>
+      <div class="tip-text">
+        <div>拖动 ≡ 图标可调整名次</div>
+        <div>点击名字可选择身份</div>
+      </div>
       <button class="close-tip-btn" @click="hideRankingTip">✕</button>
     </div>
   </div>
@@ -183,6 +185,9 @@ export default {
 .rank-number {
   margin-right: 15px;
   font-weight: bold;
+  display: inline-block;
+  width: 25px;
+  text-align: right;
 }
 
 .player-name {
@@ -213,10 +218,6 @@ export default {
   height: 100%;
   min-width: 24px;
   line-height: 1;
-}
-
-.emperor-indicator, .guard-indicator, .self-guard-indicator {
-  opacity: 1;
 }
 
 .self-guard-indicator {
@@ -270,10 +271,9 @@ export default {
 
 .chosen-item {
   opacity: 1 !important;
-  background-color: #f0f0f0 !important;
+  background-color: rgba(33, 150, 243, 0.08) !important;
   z-index: 1;
   position: relative;
-  background-color: rgba(33, 150, 243, 0.08) !important;
 }
 
 .dragging {
@@ -284,12 +284,12 @@ export default {
 .ranking-tip {
   display: flex;
   align-items: center;
-  background-color: #fff8e1; /* 改为淡黄色背景 */
+  background-color: #fff8e1;
   padding: 8px 12px;
   border-radius: 6px;
   margin-top: 15px;
   font-size: 13px;
-  color: #ff8f00; /* 调整文字颜色 */
+  color: #ff8f00;
   position: relative;
   border: 1px solid rgba(255, 193, 7, 0.2);
 }
@@ -317,10 +317,6 @@ export default {
   align-items: center;
   justify-content: center;
   transition: background-color 0.2s;
-}
-
-.close-tip-btn:hover {
-  background-color: rgba(255, 193, 7, 0.1);
 }
 
 @media (max-width: 768px) {

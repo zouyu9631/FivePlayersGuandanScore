@@ -50,25 +50,25 @@ export default {
     const visible = ref(false);
     const selectedCard = ref(props.modelValue);
     const showHint = ref(true);
-
+    
     onMounted(() => {
       if (getItem(STORAGE_KEYS.CARD_SELECTOR_HINT, false)) {
         showHint.value = false;
       }
     });
-
+    
     watch(() => props.modelValue, (newValue) => {
       selectedCard.value = newValue;
     });
     
     const openSelector = () => { visible.value = true; };
     const closeSelector = () => { visible.value = false; };
-
+    
     const dismissHint = () => {
       showHint.value = false;
       setItem(STORAGE_KEYS.CARD_SELECTOR_HINT, 'true');
     };
-
+    
     const handleCardSelect = (suit, value) => {
       let card = suit === 'joker' ? '🃏' : getCardDisplay(suit, value);
       
@@ -78,7 +78,7 @@ export default {
       
       if (showHint.value) dismissHint();
     };
-
+    
     return {
       visible,
       selectedCard,
@@ -148,7 +148,6 @@ export default {
 .card-option:active {
   outline: none;
   background-color: #f0f0f0;
-  transform: none;
 }
 
 .card-display {

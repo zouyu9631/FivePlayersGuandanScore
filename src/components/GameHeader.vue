@@ -3,9 +3,8 @@
     <div class="header-card">
       <div class="header-top">
         <h2>总分</h2>
-        <button class="history-button" @click="$emit('toggle-history')">
-          <span class="history-icon">📜</span>
-          <span class="history-text">历史记录</span>
+        <button class="rules-button" @click="$emit('show-rules')" title="游戏规则">
+          <span class="rules-icon">?</span>
         </button>
       </div>
       <div class="player-scores">
@@ -30,7 +29,7 @@ export default {
       required: true
     }
   },
-  emits: ['toggle-history'],
+  emits: ['show-rules'],
   setup() {
     return { getScoreClass, formatScore };
   }
@@ -66,27 +65,31 @@ export default {
   font-size: 20px;
 }
 
-.history-button {
-  display: flex;
-  align-items: center;
-  padding: 4px 10px;
-  background-color: rgba(33, 150, 243, 0.1);
-  border: 1px solid rgba(33, 150, 243, 0.2);
-  border-radius: 16px;
-  cursor: pointer;
-  transition: all 0.2s;
+.rules-button {
+  width: 36px;
+  height: 36px;
+  background-color: transparent;
   color: var(--primary-color);
-  font-weight: 500;
-  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  border: none;
+  box-sizing: border-box;
 }
 
-.history-icon {
-  font-size: 15px;
-  margin-right: 5px;
-}
-
-.history-text {
-  font-size: 13px;
+.rules-icon {
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .player-scores {
@@ -124,26 +127,21 @@ export default {
     font-size: 18px;
   }
   
-  .history-button {
-    padding: 3px 8px;
-    height: 26px;
-  }
-  
-  .history-icon {
-    font-size: 14px;
-    margin-right: 3px;
-  }
-  
-  .history-text {
-    font-size: 12px;
-  }
-  
   .player-score .player-name {
     font-size: 12px;
   }
   
   .player-score {
     padding: 4px 0;
+  }
+  
+  .rules-button {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .rules-icon {
+    font-size: 20px;
   }
 }
 </style>

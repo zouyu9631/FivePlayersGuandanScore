@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useGameStats } from '../composables/useGameStats';
 import { formatScore, getScoreClass, sortPlayers } from '../utils/gameUtils';
 
@@ -130,11 +130,9 @@ export default {
   emits: ['continue', 'end'],
   
   setup(props) {
-    const playersRef = ref(props.players);
-    const gameHistoryRef = ref(props.gameHistory);
-    
+    const gameHistoryRef = computed(() => props.gameHistory);
     const sortedPlayers = computed(() => sortPlayers(props.players));
-
+    
     const {
       emperorTeamWinRate,
       emperorAvgScore,
@@ -142,8 +140,8 @@ export default {
       getPlayerRoleCount,
       getPlayerRoleWinRate,
       getPlayerRoleTotalScore
-    } = useGameStats(playersRef, gameHistoryRef);
-
+    } = useGameStats(computed(() => props.players), gameHistoryRef);
+    
     return { 
       gameHistoryRef,
       sortedPlayers,
@@ -215,6 +213,8 @@ export default {
   padding-left: 0;
   white-space: nowrap;
   text-align: right;
+  font-family: 'Courier New', monospace;
+  letter-spacing: -0.5px;
 }
 
 .role-col {
@@ -239,16 +239,13 @@ export default {
   font-size: 0.9em;
   padding-right: 8px;
   min-width: 30px;
+  font-family: 'Courier New', monospace;
+  letter-spacing: -0.5px;
 }
 
 .table-header .role-stats span {
   text-align: right;
   padding-right: 8px;
-}
-
-.role-stats span, .score-col {
-  font-family: 'Courier New', monospace;
-  letter-spacing: -0.5px;
 }
 
 .summary-actions {
@@ -305,7 +302,6 @@ export default {
   font-weight: bold;
   cursor: pointer;
   flex: 1;
-  transition: all 0.2s;
 }
 
 .return-btn {

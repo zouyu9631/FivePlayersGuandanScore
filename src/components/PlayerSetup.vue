@@ -209,28 +209,25 @@ export default {
   position: relative;
   width: 36px;
   height: 36px;
-  border-radius: 50%;
-  background-color: rgba(var(--primary-color-rgb), 0.05);
+  background-color: transparent;
   color: var(--primary-color);
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  border: 1.5px solid rgba(var(--primary-color-rgb), 0.5);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   transition: all 0.2s ease;
   padding: 0;
+  border: none;
   box-sizing: border-box;
   min-width: 36px;
   min-height: 36px;
   max-width: 36px;
   max-height: 36px;
-  overflow: hidden;
 }
 
 .rules-icon {
-  font-size: 20px;
-  font-weight: normal;
+  font-size: 24px;
+  font-weight: bold;
   line-height: 1;
   text-align: center;
   width: 100%;
@@ -259,7 +256,7 @@ export default {
   }
   
   .rules-icon {
-    font-size: 18px;
+    font-size: 20px;
   }
   
   .setup-card {

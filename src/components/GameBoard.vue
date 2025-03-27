@@ -1,9 +1,8 @@
 <template>
   <div class="container">
     <GameHeader 
-      :players="players" 
-      :showHistory="showHistory"
-      @toggle-history="toggleHistory"
+      :players="players"
+      @show-rules="showRules = true"
     />
 
     <CardSelector v-model="calledCard" :currentRound="currentRound" />
@@ -14,6 +13,9 @@
       :guard="guard"
       @select-player="handlePlayerSelect"
     />
+
+    <!-- 规则弹窗 -->
+    <RulesModal v-if="showRules" @close="showRules = false" />
 
     <transition name="drawer">
       <div v-if="showHistory" class="history-drawer-container" @click.self="toggleHistory">
@@ -28,10 +30,16 @@
     </transition>
 
     <div class="floating-btns-container">
-      <button class="floating-action-btn summary-btn" @click="handleEndGame">
-        <span class="action-icon">📊</span>
-        <span class="action-text">结算总分</span>
-      </button>
+      <div class="btn-column left-column">
+        <button class="floating-action-btn history-btn" @click="toggleHistory">
+          <span class="action-icon">📜</span>
+          <span class="action-text">历史记录</span>
+        </button>
+        <button class="floating-action-btn summary-btn" @click="handleEndGame">
+          <span class="action-icon">📊</span>
+          <span class="action-text">结算总分</span>
+        </button>
+      </div>
       
       <button class="floating-action-btn calculate-btn" @click="handleCalculateScore">
         <span class="action-icon">💰</span>
@@ -89,6 +97,7 @@ import PlayerRanking from './PlayerRanking.vue';
 import RoleAssignmentDialog from './RoleAssignmentDialog.vue';
 import ErrorModal from './ErrorModal.vue';
 import GameSummaryModal from './GameSummaryModal.vue';
+import RulesModal from './RulesModal.vue';
 
 export default {
   components: {
@@ -99,7 +108,8 @@ export default {
     PlayerRanking,
     RoleAssignmentDialog,
     ErrorModal,
-    GameSummaryModal
+    GameSummaryModal,
+    RulesModal
   },
   
   props: {
@@ -126,6 +136,7 @@ export default {
     const showRoleSelection = ref(false);
     const showError = ref(false);
     const showGameSummary = ref(false);
+    const showRules = ref(false);
     const selectedPlayer = ref('');
     const errorMessage = ref('');
     const dialogPosition = ref({ x: 0, y: 0 });
@@ -214,6 +225,7 @@ export default {
       showRoleSelection,
       showError,
       showGameSummary,
+      showRules,
       errorMessage,
       selectedPlayer,
       dialogPosition,
@@ -239,6 +251,7 @@ export default {
   right: 0;
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
   padding: 0 20px;
   z-index: 50;
 }
@@ -254,22 +267,38 @@ export default {
   font-weight: bold;
   transition: all 0.3s;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  max-width: 48%;
-}
-
-.action-icon {
-  font-size: 18px;
-  margin-right: 5px;
 }
 
 .calculate-btn {
   background-color: var(--primary-color);
   box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
+  max-width: 48%;
+  height: fit-content;
+}
+
+.btn-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.left-column {
+  max-width: 48%;
 }
 
 .summary-btn {
   background-color: var(--error-color);
   box-shadow: 0 4px 10px rgba(244, 67, 54, 0.3);
+}
+
+.history-btn {
+  background-color: var(--warning-color);
+  box-shadow: 0 4px 10px rgba(255, 152, 0, 0.3);
+}
+
+.action-icon {
+  font-size: 18px;
+  margin-right: 5px;
 }
 
 @media (max-width: 768px) {
@@ -281,6 +310,10 @@ export default {
   .floating-btns-container {
     bottom: 15px;
     padding: 0 15px;
+  }
+  
+  .btn-column {
+    gap: 8px;
   }
   
   .action-icon {
@@ -299,6 +332,10 @@ export default {
   
   .floating-btns-container {
     padding: 0 10px;
+  }
+  
+  .btn-column {
+    gap: 6px;
   }
 }
 
