@@ -4,7 +4,8 @@ export const RANK_NAMES = ['头游', '二游', '三游', '四游', '末游'];
 
 export const STORAGE_KEYS = {
   GAME_STATE: 'guandanGame',
-  CARD_SELECTOR_HINT: 'cardSelectorHintShown'
+  CARD_SELECTOR_HINT: 'cardSelectorHintShown',
+  RANKING_HINT: 'rankingHintShown'
 };
 
 export const DEFAULT_CALLED_CARD = '🃏';

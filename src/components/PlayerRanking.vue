@@ -40,16 +40,19 @@
       </template>
     </draggable>
     
-    <div class="ranking-tip">
+    <div v-if="showRankingTip" class="ranking-tip">
       <span class="tip-icon">💡</span>
       <span class="tip-text">拖动 ≡ 图标可调整名次，点击名字可选择身份</span>
+      <button class="close-tip-btn" @click="hideRankingTip">✕</button>
     </div>
   </div>
 </template>
 
 <script>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import draggable from 'vuedraggable';
+import { setItem, getItem } from '../utils/storageUtils';
+import { STORAGE_KEYS } from '../config/gameConfig';
 
 export default {
   components: {
@@ -73,6 +76,8 @@ export default {
       set: (value) => emit('update:modelValue', value)
     });
     
+    const showRankingTip = ref(true);
+    
     onMounted(() => {
       const dragHandles = document.querySelectorAll('.drag-handle');
       
@@ -81,7 +86,17 @@ export default {
           e.preventDefault();
         }, { passive: false });
       });
+
+      // 检查提示是否应该显示
+      if (getItem(STORAGE_KEYS.RANKING_HINT, false)) {
+        showRankingTip.value = false;
+      }
     });
+    
+    const hideRankingTip = () => {
+      showRankingTip.value = false;
+      setItem(STORAGE_KEYS.RANKING_HINT, 'true');
+    };
     
     const handlePlayerClick = (event, playerName) => {
       const position = {
@@ -93,6 +108,8 @@ export default {
     
     return {
       internalValue,
+      showRankingTip,
+      hideRankingTip,
       handlePlayerClick
     };
   }
@@ -267,12 +284,14 @@ export default {
 .ranking-tip {
   display: flex;
   align-items: center;
-  background-color: #e8f5e9;
+  background-color: #fff8e1; /* 改为淡黄色背景 */
   padding: 8px 12px;
   border-radius: 6px;
   margin-top: 15px;
   font-size: 13px;
-  color: #2e7d32;
+  color: #ff8f00; /* 调整文字颜色 */
+  position: relative;
+  border: 1px solid rgba(255, 193, 7, 0.2);
 }
 
 .tip-icon {
@@ -282,6 +301,26 @@ export default {
 
 .tip-text {
   flex: 1;
+}
+
+.close-tip-btn {
+  background: none;
+  border: none;
+  color: #ff8f00;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.close-tip-btn:hover {
+  background-color: rgba(255, 193, 7, 0.1);
 }
 
 @media (max-width: 768px) {
@@ -339,6 +378,11 @@ export default {
   
   .role-indicator {
     font-size: 16px;
+  }
+  
+  .close-tip-btn {
+    width: 28px;
+    height: 28px;
   }
 }
 
