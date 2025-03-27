@@ -4,7 +4,7 @@
       <h3>信息不完整</h3>
       <p>{{ message }}</p>
       <div class="error-actions">
-        <button @click="$emit('close')" class="error-btn">确定</button>
+        <button @click="$emit('close')" class="action-btn error-btn">确定</button>
       </div>
     </div>
   </div>
@@ -45,8 +45,28 @@ export default {
   justify-content: center;
 }
 
+.action-btn {
+  color: var(--text-color);
+  border-radius: 18px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s;
+  background-color: white;
+}
+
 .error-btn {
-  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  background-color: rgba(74, 123, 255, 0.08);
+  box-shadow: 0 2px 4px rgba(74, 123, 255, 0.15);
   padding: 10px 30px;
+}
+
+.error-btn:active {
+  background-color: rgba(74, 123, 255, 0.15);
 }
 </style>

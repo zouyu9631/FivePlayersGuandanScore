@@ -23,7 +23,10 @@
           />
         </div>
         <div class="actions">
-          <button @click="startGame" class="primary-btn">开始游戏</button>
+          <button @click="startGame" class="action-btn start-game-btn">
+            <span class="action-icon">🎮</span>
+            <span class="action-text">开始游戏</span>
+          </button>
         </div>
       </div>
     </div>
@@ -179,17 +182,35 @@ export default {
   margin-bottom: 10px;
 }
 
-.primary-btn {
-  padding: 12px 25px;
-  font-size: 16px;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: 30px;
-  font-weight: bold;
-  cursor: pointer;
+.action-btn {
+  color: var(--text-color);
+  border-radius: 18px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid;
+  font-size: 14px;
+  font-weight: 600;
   transition: all 0.3s;
-  box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
+  background-color: white;
+}
+
+.start-game-btn {
+  border-color: var(--primary-color);
+  background-color: rgba(74, 123, 255, 0.08);
+  box-shadow: 0 2px 4px rgba(74, 123, 255, 0.15);
+  padding: 10px 20px;
+}
+
+.start-game-btn .action-icon {
+  color: var(--primary-color);
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.start-game-btn:active {
+  background-color: rgba(74, 123, 255, 0.15);
 }
 
 .default-name {
@@ -270,6 +291,16 @@ export default {
   
   .primary-btn {
     padding: 10px 20px;
+  }
+
+  .action-btn {
+    padding: 8px 15px;
+    font-size: 13px;
+  }
+  
+  .action-icon {
+    font-size: 14px;
+    margin-right: 5px;
   }
 }
 </style>
