@@ -93,6 +93,69 @@ export function useGameStats(players, gameHistory) {
     }, 0);
   };
 
+  // 获取玩家胜率的函数，胜利定义为玩家在一局游戏中得分为正
+  const getPlayerWinRate = (playerName) => {
+    if (gameHistory.value.length === 0) return 0;
+    
+    const playerGames = gameHistory.value.filter(round => {
+      return round.ranking && round.ranking.includes(playerName);
+    });
+    
+    if (playerGames.length === 0) return 0;
+    
+    const wins = playerGames.filter(round => {
+      return round.scoreChanges && round.scoreChanges[playerName] > 0;
+    }).length;
+    
+    return Math.round((wins / playerGames.length) * 100);
+  };
+
+  // 获取玩家胜场数
+  const getPlayerWinCount = (playerName) => {
+    return gameHistory.value.filter(round => {
+      return round.scoreChanges && round.scoreChanges[playerName] > 0;
+    }).length;
+  };
+
+  // 获取玩家头游次数
+  const getFirstRankCount = (playerName) => {
+    return gameHistory.value.filter(round => {
+      return round.ranking && round.ranking[0] === playerName;
+    }).length;
+  };
+
+  // MVP玩家计算，基于胜率
+  const mvpPlayers = computed(() => {
+    if (gameHistory.value.length === 0) return [];
+    
+    // 玩家综合评分数据
+    const playerScores = players.value.map(player => {
+      const winCount = getPlayerWinCount(player.name);
+      const winRate = getPlayerWinRate(player.name);
+      const totalScore = player.score;
+      
+      // 计算综合得分，胜率权重最高，其次是胜场数，然后是总分
+      const score = winRate * 100 + winCount + totalScore / 100;
+      
+      return {
+        name: player.name,
+        score,
+        winRate
+      };
+    });
+    
+    // 按综合评分排序
+    playerScores.sort((a, b) => b.score - a.score);
+    
+    if (playerScores.length === 0) return [];
+    
+    const topScore = playerScores[0].score;
+    // 获取所有与最高分相同的玩家
+    return playerScores
+      .filter(p => p.score === topScore)
+      .map(p => p.name);
+  });
+
   return {
     formatScore,
     getScoreClass,
@@ -101,6 +164,10 @@ export function useGameStats(players, gameHistory) {
     farmerAvgScore,
     getPlayerRoleCount,
     getPlayerRoleWinRate,
-    getPlayerRoleTotalScore
+    getPlayerRoleTotalScore,
+    getPlayerWinRate,
+    getFirstRankCount,
+    getPlayerWinCount,
+    mvpPlayers
   };
 }
