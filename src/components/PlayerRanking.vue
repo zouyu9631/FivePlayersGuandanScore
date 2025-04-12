@@ -31,9 +31,9 @@
           <span class="rank-number">{{ index + 1 }}. </span>
           <span class="player-name" @click="handlePlayerClick($event, element.name)">{{ element.name }}</span>
           <div class="role-indicators">
-            <span v-if="element.name === emperor && element.name !== guard" class="role-indicator emperor-indicator">👑</span>
-            <span v-if="element.name === guard && element.name !== emperor" class="role-indicator guard-indicator">🛡️</span>
-            <span v-if="element.name === emperor && element.name === guard" class="role-indicator self-guard-indicator">👑🛡️</span>
+            <span v-if="element.name === emperor && element.name === guard" class="role-indicator self-guard-indicator">{{ ROLE_ICONS.SELF_GUARD }}</span>
+            <span v-else-if="element.name === emperor" class="role-indicator emperor-indicator">{{ ROLE_ICONS.EMPEROR }}</span>
+            <span v-else-if="element.name === guard" class="role-indicator guard-indicator">{{ ROLE_ICONS.GUARD }}</span>
           </div>
         </div>
       </template>
@@ -54,7 +54,7 @@
 import { computed, onMounted, ref } from 'vue';
 import draggable from 'vuedraggable';
 import { setItem, getItem } from '../utils/storageUtils';
-import { STORAGE_KEYS } from '../config/gameConfig';
+import { STORAGE_KEYS, ROLE_ICONS } from '../config/gameConfig';
 
 export default {
   components: {
@@ -112,7 +112,8 @@ export default {
       internalValue,
       showRankingTip,
       hideRankingTip,
-      handlePlayerClick
+      handlePlayerClick,
+      ROLE_ICONS
     };
   }
 };

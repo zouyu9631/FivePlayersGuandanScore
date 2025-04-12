@@ -1,13 +1,18 @@
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
 import { getRankName } from '../utils/gameUtils';
 import { calculateScores } from '../utils/guandanRules';
+import { DEFAULT_CALLED_CARD } from '../config/gameConfig';
 
 export function useGameLogic(props) {
   const playerRanking = ref([...props.players]);
   const emperor = ref('');
   const guard = ref('');
-  const calledCard = ref('🃏');
+  const calledCard = ref(DEFAULT_CALLED_CARD);
   const scoreChanges = reactive({});
+  
+  watch(() => props.players, (newPlayers) => {
+    playerRanking.value = [...newPlayers];
+  }, { deep: true });
   
   const isReadyToCalculate = computed(() => {
     return emperor.value !== '' && guard.value !== '';
@@ -25,20 +30,22 @@ export function useGameLogic(props) {
       isSelfGuard: isSelfGuard.value
     });
     
-    Object.keys(changes).forEach(key => {
-      scoreChanges[key] = changes[key];
+    Object.keys(scoreChanges).forEach(key => delete scoreChanges[key]);
+    Object.entries(changes).forEach(([key, value]) => {
+      scoreChanges[key] = value;
     });
     
     return true;
   };
   
-  const resetRound = (players) => {
+  const resetRound = () => {
     emperor.value = '';
     guard.value = '';
-    calledCard.value = '🃏';
-    playerRanking.value = [...players];
+    calledCard.value = DEFAULT_CALLED_CARD;
+    playerRanking.value = [...props.players];
+    
     Object.keys(scoreChanges).forEach(key => {
-      scoreChanges[key] = 0;
+      delete scoreChanges[key];
     });
   };
   

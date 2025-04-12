@@ -17,7 +17,6 @@ import { ref } from 'vue';
 import PlayerSetup from './components/PlayerSetup.vue';
 import GameBoard from './components/GameBoard.vue';
 import { loadGameState, saveGameState, clearGameState } from './utils/storageUtils';
-import { safeExecute } from './utils/errorUtils';
 
 export default {
   components: {
@@ -52,25 +51,13 @@ export default {
     };
     
     const updateHistory = (roundData) => {
+      players.value.forEach(player => {
+        const scoreChange = Number(roundData.scoreChanges[player.name] || 0);
+        player.score = Number(player.score || 0) + scoreChange;
+      });
+      
       gameHistory.value.push(roundData);
       currentRound.value++;
-      
-      safeExecute(() => {
-        let expectedScores = {};
-        players.value.forEach(p => { expectedScores[p.name] = 0; });
-        
-        gameHistory.value.forEach((round) => {
-          Object.keys(round.scoreChanges).forEach(playerName => {
-            expectedScores[playerName] = (expectedScores[playerName] || 0) + Number(round.scoreChanges[playerName]);
-          });
-        });
-        
-        players.value.forEach(p => {
-          if (p.score !== expectedScores[p.name]) {
-            p.score = expectedScores[p.name];
-          }
-        });
-      }, [], null, '验证分数计算');
       
       saveGameState({
         players: players.value,

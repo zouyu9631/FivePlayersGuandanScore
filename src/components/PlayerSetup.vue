@@ -18,8 +18,8 @@
             :placeholder="defaultNames[index]" 
             maxlength="8" 
             @blur="validateName(index)"
-            @focus="onFocus(index)"
-            :class="{'default-name': isDefaultName(index)}"
+            @focus="player.name === defaultNames[index] ? player.name = '' : null"
+            :class="{'default-name': !player.name || player.name === defaultNames[index]}"
           />
         </div>
         <div class="actions">
@@ -52,22 +52,10 @@ export default {
     const defaultNames = DEFAULT_PLAYER_NAMES;
     const showRules = ref(false);
     
-    const players = ref([
-      { name: '', score: 0 },
-      { name: '', score: 0 },
-      { name: '', score: 0 },
-      { name: '', score: 0 },
-      { name: '', score: 0 }
-    ]);
+    const players = ref(defaultNames.map(name => ({ name, score: 0 })));
     
     const isDefaultName = (index) => {
       return !players.value[index].name || players.value[index].name === defaultNames[index];
-    };
-    
-    const onFocus = (index) => {
-      if (players.value[index].name === defaultNames[index]) {
-        players.value[index].name = '';
-      }
     };
     
     const validateName = (index) => {
@@ -94,7 +82,6 @@ export default {
       defaultNames,
       startGame,
       validateName,
-      onFocus,
       isDefaultName,
       showRules
     };

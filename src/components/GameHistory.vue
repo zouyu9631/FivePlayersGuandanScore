@@ -16,9 +16,9 @@
             <tr class="role-row">
               <td class="round-cell">{{ i + 1 }}</td>
               <td v-for="player in sortedPlayerNames" :key="`${i}-${player}-role`" class="role-cell">
-                <span v-if="player === round.emperor && player !== round.guard" class="role-icon emperor-icon">{{ ROLE_ICONS.EMPEROR }}</span>
-                <span v-else-if="player === round.guard && player !== round.emperor" class="role-icon guard-icon">{{ ROLE_ICONS.GUARD }}</span>
-                <span v-else-if="player === round.emperor && player === round.guard" class="role-icon self-guard-icon">{{ ROLE_ICONS.SELF_GUARD }}</span>
+                <span v-if="player === round.emperor && player === round.guard" class="role-icon self-guard-icon">{{ ROLE_ICONS.SELF_GUARD }}</span>
+                <span v-else-if="player === round.emperor" class="role-icon emperor-icon">{{ ROLE_ICONS.EMPEROR }}</span>
+                <span v-else-if="player === round.guard" class="role-icon guard-icon">{{ ROLE_ICONS.GUARD }}</span>
                 <span v-else class="role-placeholder">&nbsp;</span>
               </td>
             </tr>
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { computed, onMounted } from 'vue';
 import { isRedCard } from '../utils/cardUtils';
 import { formatScore, getScoreClass } from '../utils/gameUtils';
 import { ROLE_ICONS } from '../config/gameConfig';
@@ -61,52 +62,51 @@ export default {
       required: true
     }
   },
-  computed: {
-    sortedPlayerNames() {
-      if (this.gameHistory.length === 0) return [];
+  
+  setup(props) {
+    const sortedPlayerNames = computed(() => {
+      if (props.gameHistory.length === 0) return [];
       
       const playerNames = new Set();
-      this.gameHistory.forEach(round => {
-        Object.keys(round.scoreChanges).forEach(name => {
+      props.gameHistory.forEach(round => {
+        Object.keys(round.scoreChanges || {}).forEach(name => {
           playerNames.add(name);
         });
       });
       
       const result = Array.from(playerNames);
       result.sort((a, b) => {
-        const indexA = this.players.findIndex(p => p.name === a);
-        const indexB = this.players.findIndex(p => p.name === b);
+        const indexA = props.players.findIndex(p => p.name === a);
+        const indexB = props.players.findIndex(p => p.name === b);
         return indexA - indexB;
       });
       
       return result;
-    }
-  },
-  methods: {
-    isRedCard,
-    formatScore,
-    getScoreClass
-  },
-  data() {
+    });
+    
+    const scrollToBottom = () => {
+      setTimeout(() => {
+        const container = document.querySelector('.history-table-container');
+        if (container) {
+          container.scrollTop = container.scrollHeight;
+        }
+      });
+    };
+    
+    onMounted(scrollToBottom);
+    
     return {
-      ROLE_ICONS
+      sortedPlayerNames,
+      isRedCard,
+      formatScore,
+      getScoreClass,
+      ROLE_ICONS,
+      scrollToBottom
     };
   },
-  mounted() {
-    this.$nextTick(() => {
-      const container = this.$el.querySelector('.history-table-container');
-      if (container) {
-        container.scrollTop = container.scrollHeight;
-      }
-    });
-  },
+  
   updated() {
-    this.$nextTick(() => {
-      const container = this.$el.querySelector('.history-table-container');
-      if (container) {
-        container.scrollTop = container.scrollHeight;
-      }
-    });
+    this.scrollToBottom();
   }
 };
 </script>

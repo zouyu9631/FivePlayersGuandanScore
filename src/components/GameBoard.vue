@@ -170,11 +170,6 @@ export default {
     };
 
     const confirmScore = () => {
-      props.players.forEach(player => {
-        const scoreChange = Number(scoreChanges[player.name] || 0);
-        player.score = Number(player.score || 0) + scoreChange;
-      });
-      
       const roundData = {
         emperor: emperor.value,
         guard: guard.value || '',

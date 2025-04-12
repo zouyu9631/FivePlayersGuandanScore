@@ -11,7 +11,6 @@ export function loadGameState() {
 
 export function clearGameState() {
   localStorage.removeItem(STORAGE_KEYS.GAME_STATE);
-  // 同时清除排名提示的状态，这样新游戏时提示会重新显示
   localStorage.removeItem(STORAGE_KEYS.RANKING_HINT);
 }
 

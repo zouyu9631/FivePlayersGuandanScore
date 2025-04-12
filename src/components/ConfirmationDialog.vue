@@ -11,16 +11,14 @@
         </p>
         <div class="confirmation-ranks">
           <div v-for="(player, index) in playerRanking" :key="player.name" class="confirm-player-rank">
-            <span>{{ getRankName(index) }}： {{ player.name }} 
-              <span v-if="player.name === emperor && player.name !== guard" class="emperor-indicator">{{ ROLE_ICONS.EMPEROR }}</span>
-              <span v-if="player.name === guard && player.name !== emperor" class="guard-indicator">{{ ROLE_ICONS.GUARD }}</span>
+            <span>
+              {{ getRankName(index) }}： {{ player.name }} 
               <span v-if="player.name === emperor && player.name === guard" class="self-guard-indicator">{{ ROLE_ICONS.SELF_GUARD }}</span>
+              <span v-else-if="player.name === emperor" class="emperor-indicator">{{ ROLE_ICONS.EMPEROR }}</span>
+              <span v-else-if="player.name === guard" class="guard-indicator">{{ ROLE_ICONS.GUARD }}</span>
             </span>
-            <span :class="{ 
-              'positive': scoreChanges[player.name] > 0, 
-              'negative': scoreChanges[player.name] < 0
-            }">
-              {{ scoreChanges[player.name] > 0 ? '+' : '' }}{{ scoreChanges[player.name] }}
+            <span :class="getScoreClass(scoreChanges[player.name])">
+              {{ formatScore(scoreChanges[player.name]) }}
             </span>
           </div>
         </div>
@@ -35,7 +33,7 @@
 
 <script>
 import { isRedCard } from '../utils/cardUtils';
-import { getRankName } from '../utils/gameUtils';
+import { getRankName, formatScore, getScoreClass } from '../utils/gameUtils';
 import { ROLE_ICONS } from '../config/gameConfig';
 
 export default {
@@ -52,7 +50,7 @@ export default {
   },
   emits: ['confirm', 'cancel'],
   setup(props) {
-    return { getRankName, isRedCard, ROLE_ICONS };
+    return { getRankName, isRedCard, ROLE_ICONS, formatScore, getScoreClass };
   }
 };
 </script>
